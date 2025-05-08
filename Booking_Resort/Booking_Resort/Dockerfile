@@ -1,7 +1,6 @@
 FROM maven:3-openjdk-17 AS build
 WORKDIR /app
-COPY Booking_Resort/Booking_Resort/ . 
-
+COPY . .
 RUN mvn clean package -DskipTests
 # Run stage
 FROM openjdk:17-jdk-slim
