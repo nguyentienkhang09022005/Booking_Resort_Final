@@ -7,6 +7,6 @@ RUN mvn clean package -DskipTests
 # Run stage (chạy jar file)
 FROM eclipse-temurin:17
 WORKDIR /app
-COPY --from=build /app/target/Booking_Resort-0.0.2-SNAPSHOT.jar BookingResort.jar
+COPY --from=build /app/target/Booking_Resort-0.0.1-SNAPSHOT.jar BookingResort.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "BookingResort.jar"]
