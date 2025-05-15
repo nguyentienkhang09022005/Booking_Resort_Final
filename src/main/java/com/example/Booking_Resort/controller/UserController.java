@@ -60,8 +60,8 @@ public class UserController {
                 .build();
     }
 
-    // Endpoint đăng ký
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // Endpoint tạo người dùng
+    @PostMapping(value = "/create_user", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiRespone<UserRespone> createUser( @RequestPart("request") UserCreationRequest request,
                                                @RequestPart(value = "file", required = false) MultipartFile file)
     {
@@ -95,6 +95,7 @@ public class UserController {
                 .build();
     }
 
+    // Endpoint đăng nhập bằng Google
     @GetMapping("/infUserGoogle")
     public ResponseEntity<Map<String, Object>> user(Principal principal)
     {

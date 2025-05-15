@@ -11,6 +11,7 @@ public enum ErrorCode
     USER_NOT_EXIST("USER_002", "User not exist", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_EXISTS("USER_003", "User already exists", HttpStatus.BAD_REQUEST),
     FAILED_SEARCH_USER("USER_004", "Failed to search user", HttpStatus.INTERNAL_SERVER_ERROR),
+    PASSWORDS_DO_NOT_MATCH("USER_005", "Password and confirm password do not match", HttpStatus.BAD_REQUEST),
 
     // Lỗi không xác nhận người dùng
     UNAUTHENTICATED("UNAUTHENTICATED", "Unauthenticated", HttpStatus.UNAUTHORIZED),
@@ -58,7 +59,7 @@ public enum ErrorCode
     UPLOAD_FAILED("UPLOAD_FAILED", "Upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Lỗi khác
-    INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+    INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR),;
 
     private final String code;
     private final String message;
