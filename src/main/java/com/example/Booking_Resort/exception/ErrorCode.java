@@ -55,7 +55,10 @@ public enum ErrorCode
     OTP_NOT_EXIST_FOR_EMAIL("OTP_001", "OTP not exist for email", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Lỗi lưu ảnh
-    UPLOAD_FAILED("UPLOAD_FAILED", "Upload failed", HttpStatus.INTERNAL_SERVER_ERROR),;
+    UPLOAD_FAILED("UPLOAD_FAILED", "Upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // Lỗi khác
+    INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String code;
     private final String message;
