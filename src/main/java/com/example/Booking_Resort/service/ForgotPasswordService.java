@@ -94,7 +94,7 @@ public class ForgotPasswordService
     private Integer otpGenerator()
     {
         Random random = new Random();
-        return random.nextInt(100000,1000000);
+        return random.nextInt(1000,10000);
     }
 
     // Hàm Resend OTP
