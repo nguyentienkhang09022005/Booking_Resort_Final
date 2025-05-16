@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,6 +31,23 @@ public class MonthlyReportService {
     MonthlyReportRepository monthlyReportRepository;
     MonthlyReportMapper monthlyReportMapper;
     ResortRepository resortRepository;
+
+    // Hàm lấy danh sách báo cáo
+    public List<MonthlyReportResponse> listMonthlyReport() {
+        return monthlyReportRepository.findAll()
+                .stream()
+                .map(report -> MonthlyReportResponse.builder()
+                        .idReport(report.getIdReport())
+                        .nameReport(report.getIdResort().getName_rs())
+                        .reportMonth(report.getReportMonth())
+                        .reportYear(report.getReportYear())
+                        .totalRevenue(report.getTotalRevenue())
+                        .totalExpense(report.getTotalExpense())
+                        .netProfit(report.getNetProfit())
+                        .generatedAt(report.getGeneratedAt())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     // Hàm lưu báo cáo vào csdl
     public MonthlyReportResponse saveMonthlyReport(MonthlyReportCreationRequest request)
@@ -67,7 +85,10 @@ public class MonthlyReportService {
         report.setNetProfit(totalRevenue.subtract(totalExpense));
         report.setDetails(detailReports);
 
-        return monthlyReportMapper.toMonthlyReportResponse(monthlyReportRepository.save(report));
+        var reportReponse = monthlyReportMapper.toMonthlyReportResponse(monthlyReportRepository.save(report));
+        reportReponse.setIdReport(report.getIdReport());
+        reportReponse.setNameReport(report.getIdResort().getName_rs());
+        return reportReponse;
     }
 
     // Hàm xóa báo cáo
@@ -117,6 +138,9 @@ public class MonthlyReportService {
         report.setTotalExpense(totalExpense);
         report.setNetProfit(totalRevenue.subtract(totalExpense));
 
-        return monthlyReportMapper.toMonthlyReportResponse(monthlyReportRepository.save(report));
+        var reportReponse = monthlyReportMapper.toMonthlyReportResponse(monthlyReportRepository.save(report));
+        reportReponse.setIdReport(report.getIdReport());
+        reportReponse.setNameReport(report.getIdResort().getName_rs());
+        return reportReponse;
     }
 }

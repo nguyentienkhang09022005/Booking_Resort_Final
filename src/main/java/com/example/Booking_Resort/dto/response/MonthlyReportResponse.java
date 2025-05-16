@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MonthlyReportResponse {
+    private String idReport;
+    private String nameReport;
     private Integer reportMonth;
     private Integer reportYear;
     private BigDecimal totalRevenue;

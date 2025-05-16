@@ -92,6 +92,7 @@ public class RoomService
             }
         }
         RoomRespone roomRespone = roomMapper.toRoomRespone(room);
+        roomRespone.setType_room(room.getId_type().getNameType());
         roomRespone.setImage(imageRoomUrl);
         return roomRespone;
     }
@@ -140,6 +141,7 @@ public class RoomService
             }
         }
         RoomRespone roomRespone = roomMapper.toRoomRespone(room);
+        roomRespone.setType_room(room.getId_type().getNameType());
         roomRespone.setImage(imageRoomUrl);
         return roomRespone;
     }
