@@ -86,6 +86,7 @@ public class AuthenticationService
         var refreshToken = generateRefreshToken(user);
 
         return AuthenticationRespone.builder()
+                .idUser(user.getId_user())
                 .token(token)
                 .refreshToken(refreshToken)
                 .authenticated(true)

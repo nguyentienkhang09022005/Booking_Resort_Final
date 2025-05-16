@@ -1,14 +1,12 @@
-# Sử dụng image Java chính thức
-FROM openjdk:17-jdk-slim
-
-# Tạo thư mục làm việc trong container
+# Stage 1: Build project bằng Maven
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy file .jar đã build vào container
-COPY target/Booking_Resort-0.0.1-SNAPSHOT.jar BookingResort.jar
-
-# Mở port 8080 (hoặc port app của bạn)
+# Stage 2: Image nhẹ, chỉ chứa file jar để chạy
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Lệnh chạy ứng dụng
-ENTRYPOINT ["java", "-jar", "BookingResort.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

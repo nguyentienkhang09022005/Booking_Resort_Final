@@ -13,6 +13,7 @@ import lombok.Builder;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticationRespone
 {
+    String idUser;
     String token;
     String refreshToken;
     boolean authenticated;
