@@ -15,6 +15,7 @@ public interface RoomMapper
     @Mapping(target = "id_type", ignore = true)
     Room toRoom(RoomCreationRequest roomCreationRequest);
 
+    @Mapping(target = "image", ignore = true)
     RoomRespone toRoomRespone(Room room);
 
     @Mapping(target = "id_type", ignore = true)

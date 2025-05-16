@@ -20,11 +20,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -40,10 +40,24 @@ public class RoomService
     ImageRepository imageRepository;
 
     // Hàm lấy danh sách phòng
-    public List<Room> getAllRoom()
-    {
-        return roomRepository.findAll();
+    public List<RoomRespone> getAllRoom() {
+        List<Room> rooms = roomRepository.findAll();
+
+        return rooms.stream().map(room -> {
+            Image image = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom());
+
+            return RoomRespone.builder()
+                    .idRoom(room.getIdRoom())
+                    .name_room(room.getName_room())
+                    .type_room(room.getId_type() != null ? room.getId_type().getNameType() : null) // lấy tên loại phòng
+                    .price(room.getPrice())
+                    .status(room.getStatus())
+                    .describe_room(room.getDescribe_room())
+                    .image(image != null ? image.getUrl() : null)
+                    .build();
+        }).collect(Collectors.toList());
     }
+
 
     // Hàm lưu phòng xuống csdl
 //    @PreAuthorize("hasAuthority('CREATE_ROOM')")

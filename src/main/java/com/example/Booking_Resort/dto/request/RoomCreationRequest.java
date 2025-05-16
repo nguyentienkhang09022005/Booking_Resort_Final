@@ -16,7 +16,6 @@ public class RoomCreationRequest {
     String id_type;
     String name_room;
     BigDecimal price;
-    int repair;
     String describe_room;
     MultipartFile image;
 }

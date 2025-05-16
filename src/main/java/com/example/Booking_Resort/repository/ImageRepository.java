@@ -12,4 +12,7 @@ public interface ImageRepository extends JpaRepository<Image, String> {
     void deleteByIdUser(User user);
     void deleteByIdRoom(Room room);
     void deleteByIdRs(Resort resort);
+    Image findFirstByIdRs_IdRs(String idRs);
+    Image findFirstByIdRoom_IdRoom(String idRoom);
+    Image findFirstByIdUser_IdUser(String idUser);
 }

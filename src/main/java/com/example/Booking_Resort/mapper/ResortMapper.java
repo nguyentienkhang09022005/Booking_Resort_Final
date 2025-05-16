@@ -14,6 +14,7 @@ public interface ResortMapper {
     @Mapping(target = "idOwner", ignore = true)
     Resort toResort(ResortCreationRequest request);
 
+    @Mapping(target = "image", ignore = true)
     ResortResponse toResortRespone(Resort resort);
 
     void updateResort(@MappingTarget Resort resort, ResortUpdateRequest request);

@@ -33,10 +33,10 @@ public class UserController {
 
     // Endpoint lấy danh sách người dùng
     @GetMapping("/list_user")
-    public ApiRespone<List<User>> getAllUser()
+    public ApiRespone<List<UserRespone>> getAllUser()
     {
-        return ApiRespone.<List<User>>builder()
-                .data(userService.getAllUser())
+        return ApiRespone.<List<UserRespone>>builder()
+                .data(userService.getAllUsers())
                 .build();
     }
 

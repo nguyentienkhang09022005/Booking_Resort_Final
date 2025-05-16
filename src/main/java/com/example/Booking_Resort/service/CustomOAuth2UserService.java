@@ -37,7 +37,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = userService.processOAuth2User(email, name, urlAvatar);
 
         // Kiểm tra lại xem user đã có ID chưa
-        if (user.getId_user() == null) {
+        if (user.getIdUser() == null) {
             throw new RuntimeException("Lưu user thất bại");
         }
         return oAuth2User;

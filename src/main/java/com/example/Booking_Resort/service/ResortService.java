@@ -2,6 +2,7 @@ package com.example.Booking_Resort.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.Booking_Resort.dto.request.ResortCreationRequest;
 import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
@@ -21,7 +22,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -37,9 +37,19 @@ public class ResortService {
     ImageRepository imageRepository;
 
     // Hàm lấy danh sách resort
-    public List<Resort> getAllResort()
+    public List<ResortResponse> getAllResort()
     {
-        return resortRepository.findAll();
+        List<Resort> resorts = resortRepository.findAll();
+        return resorts.stream().map(resort -> {
+            Image image = imageRepository.findFirstByIdRs_IdRs(resort.getIdRs());
+            return ResortResponse.builder()
+                    .idRs(resort.getIdRs())
+                    .name_rs(resort.getName_rs())
+                    .location_rs(resort.getLocation_rs())
+                    .describe_rs(resort.getDescribe_rs())
+                    .image(image != null ? image.getUrl() : null)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     // Hàm lưu resort xuống csdl
@@ -72,6 +82,7 @@ public class ResortService {
 
         ResortResponse resortResponse = resortMapper.toResortRespone(resort);
         resortResponse.setImage(imageResortUrl);
+        resortResponse.setIdRs(resort.getIdRs());
         return resortResponse;
     }
 

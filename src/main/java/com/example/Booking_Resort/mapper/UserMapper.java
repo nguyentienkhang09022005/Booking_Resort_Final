@@ -11,6 +11,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface UserMapper
 {
+    @Mapping(target = "avatar", ignore = true)
     UserRespone toUserRespone(User user);
 
     User toUser(UserCreationRequest request);

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -45,9 +46,25 @@ public class UserService
 
 
     // Hàm lấy danh sách người dùng
-    public List<User> getAllUser()
-    {
-        return userRepository.findAll();
+    public List<UserRespone> getAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        return users.stream().map(user -> {
+            Image image = imageRepository.findFirstByIdUser_IdUser(user.getIdUser());
+
+            return UserRespone.builder()
+                    .idUser(user.getIdUser())
+                    .nameuser(user.getNameuser())
+                    .sex(user.getSex())
+                    .phone(user.getPhone())
+                    .email(user.getEmail())
+                    .identificationCard(user.getIdentificationCard())
+                    .dob(user.getDob())
+                    .passport(user.getPassport())
+                    .account(user.getAccount())
+                    .avatar(image != null ? image.getUrl() : null)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     // Hàm tìm user thông qua id

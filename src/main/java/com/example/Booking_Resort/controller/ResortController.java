@@ -7,7 +7,6 @@ import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
 import com.example.Booking_Resort.dto.response.ResortResponse;
 import com.example.Booking_Resort.service.ResortService;
-import com.example.Booking_Resort.models.Resort;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,9 +28,9 @@ public class ResortController {
 
     // Endpoint lấy danh sách resort
     @GetMapping("/list_resort")
-    public ApiRespone<List<Resort>> getAllResort()
+    public ApiRespone<List<ResortResponse>> getAllResort()
     {
-        return ApiRespone.<List<Resort>>builder()
+        return ApiRespone.<List<ResortResponse>>builder()
                 .data(resortService.getAllResort())
                 .build();
     }

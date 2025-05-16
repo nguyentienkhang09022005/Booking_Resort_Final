@@ -7,7 +7,6 @@ import com.example.Booking_Resort.dto.request.RoomUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
 import com.example.Booking_Resort.dto.response.RoomRespone;
 import com.example.Booking_Resort.service.RoomService;
-import com.example.Booking_Resort.models.Room;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,9 +26,9 @@ public class RoomController {
 
     // Endpoint lấy danh sách phòng
     @GetMapping("/list_room")
-    public ApiRespone<List<Room>> getAllRoom()
+    public ApiRespone<List<RoomRespone>> getAllRoom()
     {
-        return ApiRespone.<List<Room>>builder()
+        return ApiRespone.<List<RoomRespone>>builder()
                 .data(roomService.getAllRoom())
                 .build();
     }

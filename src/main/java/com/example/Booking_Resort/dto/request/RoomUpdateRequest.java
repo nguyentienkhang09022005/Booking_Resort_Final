@@ -16,7 +16,6 @@ public class RoomUpdateRequest
     String name_room;
     String id_type;
     BigDecimal price;
-    int repair;
     String status;
     String describe_room;
     MultipartFile image;

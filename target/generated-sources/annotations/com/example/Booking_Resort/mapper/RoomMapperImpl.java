@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-16T15:20:58+0700",
+    date = "2025-05-17T00:45:03+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
@@ -25,7 +25,6 @@ public class RoomMapperImpl implements RoomMapper {
 
         room.setName_room( roomCreationRequest.getName_room() );
         room.setPrice( roomCreationRequest.getPrice() );
-        room.setRepair( roomCreationRequest.getRepair() );
         room.setDescribe_room( roomCreationRequest.getDescribe_room() );
 
         return room;
@@ -39,9 +38,9 @@ public class RoomMapperImpl implements RoomMapper {
 
         RoomRespone.RoomResponeBuilder roomRespone = RoomRespone.builder();
 
+        roomRespone.idRoom( room.getIdRoom() );
         roomRespone.name_room( room.getName_room() );
         roomRespone.price( room.getPrice() );
-        roomRespone.repair( room.getRepair() );
         roomRespone.status( room.getStatus() );
         roomRespone.describe_room( room.getDescribe_room() );
 
@@ -56,7 +55,6 @@ public class RoomMapperImpl implements RoomMapper {
 
         room.setName_room( request.getName_room() );
         room.setPrice( request.getPrice() );
-        room.setRepair( request.getRepair() );
         room.setStatus( request.getStatus() );
         room.setDescribe_room( request.getDescribe_room() );
     }
