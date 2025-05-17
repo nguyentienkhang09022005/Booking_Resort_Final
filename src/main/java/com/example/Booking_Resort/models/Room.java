@@ -19,7 +19,7 @@ public class Room
 
     @ManyToOne
     @JoinColumn(name = "id_rs", nullable = false)
-    private Resort id_rs;
+    private Resort idRs;
 
     @ManyToOne
     @JoinColumn(name = "id_type", nullable = false)

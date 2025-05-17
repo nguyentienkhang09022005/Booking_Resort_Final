@@ -11,5 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FavoriteResortRespone {
+    String resortId;
+    String resortName;
+    String imageUrl;
     LocalDateTime created_at;
 }

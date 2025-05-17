@@ -6,6 +6,7 @@ import com.example.Booking_Resort.dto.request.PaymentUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
 import com.example.Booking_Resort.dto.response.FavoriteResortRespone;
 import com.example.Booking_Resort.dto.response.PaymentRespone;
+import com.example.Booking_Resort.dto.response.ResortResponse;
 import com.example.Booking_Resort.models.Payment;
 import com.example.Booking_Resort.service.FavoriteResortService;
 import com.example.Booking_Resort.service.PaymentService;
@@ -25,6 +26,15 @@ import java.util.List;
 public class FavoriteResortController
 {
     FavoriteResortService favoriteResortService;
+
+    // Endpoint lấy danh sách resort đã yêu thích
+    @GetMapping("/list_favorite/{idUser}")
+    public ApiRespone<List<FavoriteResortRespone>> listFavoritResort(@PathVariable String idUser)
+    {
+        return ApiRespone.<List<FavoriteResortRespone>>builder()
+                .data(favoriteResortService.getFavoriteResorts(idUser))
+                .build();
+    }
 
     // Endpoint tạo yêu thích resort
     @PostMapping("/create_favorite")

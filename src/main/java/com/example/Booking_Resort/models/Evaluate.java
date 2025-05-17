@@ -24,7 +24,7 @@ public class Evaluate
     private User id_user;
 
     private String user_comment;
-    private Integer start_rating;
+    private Double start_rating;
 
     @CreationTimestamp
     @Column(name = "create_date", nullable = false)

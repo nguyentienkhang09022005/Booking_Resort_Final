@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface RoomMapper
 {
-    @Mapping(target = "id_rs", ignore = true)
+    @Mapping(target = "idRs", ignore = true)
     @Mapping(target = "id_type", ignore = true)
     Room toRoom(RoomCreationRequest roomCreationRequest);
 

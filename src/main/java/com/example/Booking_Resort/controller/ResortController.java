@@ -27,11 +27,11 @@ public class ResortController {
     ResortService resortService;
 
     // Endpoint lấy danh sách resort
-    @GetMapping("/list_resort")
-    public ApiRespone<List<ResortResponse>> getAllResort()
+    @GetMapping("/list_resort/{idUser}")
+    public ApiRespone<List<ResortResponse>> getAllResort(@PathVariable String idUser)
     {
         return ApiRespone.<List<ResortResponse>>builder()
-                .data(resortService.getAllResort())
+                .data(resortService.getAllResort(idUser))
                 .build();
     }
 

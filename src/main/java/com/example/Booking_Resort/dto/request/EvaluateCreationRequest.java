@@ -13,5 +13,5 @@ public class EvaluateCreationRequest
     private String id_rs;
     private String id_user;
     private String user_comment;
-    private Integer start_rating;
+    private Double start_rating;
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EvaluateRespone {
     String user_comment;
-    Integer start_rating;
+    Double start_rating;
     LocalDate create_date;
 }
 

@@ -13,6 +13,12 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -23,6 +29,38 @@ public class FavoriteResortService
     UserRepository userRepository;
     ResortRepository resortRepository;
     FavoriteResortMapper favoriteResortMapper;
+
+    // Hàm lấy danh sách yêu thích
+    public List<FavoriteResortRespone> getFavoriteResorts(String idUser) {
+        userRepository.findById(idUser).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+        List<Favorite_Resort> favorites = favoriteResortRepository.findFavoriteResortsByUserId(idUser);
+
+        // Duyệt và set DTO thủ công
+        List<FavoriteResortRespone> result = new ArrayList<>();
+        for (Favorite_Resort fr : favorites) {
+            Resort resort = fr.getId_rs();
+
+            FavoriteResortRespone dto = new FavoriteResortRespone();
+            dto.setResortId(resort.getIdRs());
+            dto.setResortName(resort.getName_rs());
+
+            String imageUrl = null;
+            List<Image> images = resort.getImages();
+            if (images != null && !images.isEmpty()) {
+                Image singleImage = images.get(0);
+                if (singleImage != null) {
+                    imageUrl = singleImage.getUrl();
+                }
+            }
+            dto.setImageUrl(imageUrl);
+            dto.setCreated_at(fr.getCreated_at()); // thời gian yêu thích
+            result.add(dto);
+        }
+
+        return result;
+    }
+
 
     // Hàm tạo yêu thích
     public FavoriteResortRespone saveFavoriteResort(FavoriteResortRequest request)

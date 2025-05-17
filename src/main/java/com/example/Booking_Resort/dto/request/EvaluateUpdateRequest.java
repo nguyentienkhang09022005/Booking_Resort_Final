@@ -11,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class EvaluateUpdateRequest
 {
     private String user_comment;
-    private Integer start_rating;
+    private Double start_rating;
 }

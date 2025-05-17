@@ -7,16 +7,16 @@ import java.util.stream.Collectors;
 import com.example.Booking_Resort.dto.request.ResortCreationRequest;
 import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
 import com.example.Booking_Resort.dto.response.ResortResponse;
+import com.example.Booking_Resort.dto.response.RoomRespone;
 import com.example.Booking_Resort.exception.ApiException;
 import com.example.Booking_Resort.exception.ErrorCode;
 import com.example.Booking_Resort.impl.UploadImageFile;
 import com.example.Booking_Resort.mapper.ResortMapper;
 import com.example.Booking_Resort.models.Image;
 import com.example.Booking_Resort.models.Resort;
+import com.example.Booking_Resort.models.Room;
 import com.example.Booking_Resort.models.User;
-import com.example.Booking_Resort.repository.ImageRepository;
-import com.example.Booking_Resort.repository.ResortRepository;
-import com.example.Booking_Resort.repository.UserRepository;
+import com.example.Booking_Resort.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -35,19 +35,49 @@ public class ResortService {
     ResortMapper resortMapper;
     UploadImageFile uploadImageFile;
     ImageRepository imageRepository;
+    EvaluateRepository evaluateRepository;
+    FavoriteResortRepository favoriteResortRepository;
+    RoomRepository roomRepository;
 
     // Hàm lấy danh sách resort
-    public List<ResortResponse> getAllResort()
+    public List<ResortResponse> getAllResort(String idUser)
     {
         List<Resort> resorts = resortRepository.findAll();
+        List<String> favoriteResortIds = favoriteResortRepository.findFavoriteResortIdsByUserId(idUser);
+
         return resorts.stream().map(resort -> {
             Image image = imageRepository.findFirstByIdRs_IdRs(resort.getIdRs());
+            Double avgRating = evaluateRepository.getAverageStartRatingByResort(resort.getIdRs());
+            double start = avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0;
+
+            // Lấy danh sách phòng thuộc resort
+            List<Room> rooms = roomRepository.findByIdRs_IdRs(resort.getIdRs());
+
+            // Map sang RoomRespone
+            List<RoomRespone> roomResponses = rooms.stream().map(room -> {
+                // Giả sử bạn có quan hệ @OneToMany giữa Room và Image, hoặc có imageRepository cho room
+                Image roomImage = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom()); // Cần tồn tại method này
+
+                return RoomRespone.builder()
+                        .idRoom(room.getIdRoom())
+                        .name_room(room.getName_room())
+                        .type_room(room.getId_type().getNameType())
+                        .price(room.getPrice())
+                        .status(room.getStatus())
+                        .describe_room(room.getDescribe_room())
+                        .image(roomImage != null ? roomImage.getUrl() : null)
+                        .build();
+            }).collect(Collectors.toList());
+
             return ResortResponse.builder()
                     .idRs(resort.getIdRs())
                     .name_rs(resort.getName_rs())
                     .location_rs(resort.getLocation_rs())
                     .describe_rs(resort.getDescribe_rs())
                     .image(image != null ? image.getUrl() : null)
+                    .start(start)
+                    .favorite(favoriteResortIds.contains(resort.getIdRs()))
+                    .rooms(roomResponses)
                     .build();
         }).collect(Collectors.toList());
     }

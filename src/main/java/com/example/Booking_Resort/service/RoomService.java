@@ -72,7 +72,7 @@ public class RoomService
         );
 
         Room room = roomMapper.toRoom(request);
-        room.setId_rs(resort);
+        room.setIdRs(resort);
         room.setId_type(typeRoom);
         roomRepository.save(room);
 
