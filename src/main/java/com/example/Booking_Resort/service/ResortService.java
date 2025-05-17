@@ -6,16 +6,14 @@ import java.util.stream.Collectors;
 
 import com.example.Booking_Resort.dto.request.ResortCreationRequest;
 import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
+import com.example.Booking_Resort.dto.response.EvaluateRespone;
 import com.example.Booking_Resort.dto.response.ResortResponse;
 import com.example.Booking_Resort.dto.response.RoomRespone;
 import com.example.Booking_Resort.exception.ApiException;
 import com.example.Booking_Resort.exception.ErrorCode;
 import com.example.Booking_Resort.impl.UploadImageFile;
 import com.example.Booking_Resort.mapper.ResortMapper;
-import com.example.Booking_Resort.models.Image;
-import com.example.Booking_Resort.models.Resort;
-import com.example.Booking_Resort.models.Room;
-import com.example.Booking_Resort.models.User;
+import com.example.Booking_Resort.models.*;
 import com.example.Booking_Resort.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -48,15 +46,27 @@ public class ResortService {
         return resorts.stream().map(resort -> {
             Image image = imageRepository.findFirstByIdRs_IdRs(resort.getIdRs());
             Double avgRating = evaluateRepository.getAverageStartRatingByResort(resort.getIdRs());
-            double start = avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0;
+            double star = avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0;
 
             // Lấy danh sách phòng thuộc resort
             List<Room> rooms = roomRepository.findByIdRs_IdRs(resort.getIdRs());
 
+            // Lấy danh sách đánh giá thuộc resort
+            List<Evaluate> evaluates = evaluateRepository.findByIdRs_IdRs(resort.getIdRs());
+
+            List<EvaluateRespone> evaluationResponses = evaluates.stream().map(evaluate -> {
+                User user = evaluate.getIdUser();
+                return EvaluateRespone.builder()
+                        .idEvaluate(evaluate.getId_evaluate())
+                        .user_comment(evaluate.getUser_comment())
+                        .star_rating(evaluate.getStar_rating())
+                        .create_date(evaluate.getCreate_date())
+                        .build();
+            }).collect(Collectors.toList());
+
             // Map sang RoomRespone
             List<RoomRespone> roomResponses = rooms.stream().map(room -> {
-                // Giả sử bạn có quan hệ @OneToMany giữa Room và Image, hoặc có imageRepository cho room
-                Image roomImage = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom()); // Cần tồn tại method này
+                Image roomImage = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom());
 
                 return RoomRespone.builder()
                         .idRoom(room.getIdRoom())
@@ -75,9 +85,10 @@ public class ResortService {
                     .location_rs(resort.getLocation_rs())
                     .describe_rs(resort.getDescribe_rs())
                     .image(image != null ? image.getUrl() : null)
-                    .start(start)
+                    .star(star)
                     .favorite(favoriteResortIds.contains(resort.getIdRs()))
                     .rooms(roomResponses)
+                    .evaluates(evaluationResponses)
                     .build();
         }).collect(Collectors.toList());
     }

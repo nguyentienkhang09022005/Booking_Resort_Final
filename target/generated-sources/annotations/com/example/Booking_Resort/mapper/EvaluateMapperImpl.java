@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-17T16:50:09+0700",
+    date = "2025-05-17T18:26:10+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
@@ -24,7 +24,7 @@ public class EvaluateMapperImpl implements EvaluateMapper {
         Evaluate evaluate = new Evaluate();
 
         evaluate.setUser_comment( request.getUser_comment() );
-        evaluate.setStart_rating( request.getStart_rating() );
+        evaluate.setStar_rating( request.getStar_rating() );
 
         return evaluate;
     }
@@ -38,7 +38,7 @@ public class EvaluateMapperImpl implements EvaluateMapper {
         EvaluateRespone.EvaluateResponeBuilder evaluateRespone = EvaluateRespone.builder();
 
         evaluateRespone.user_comment( respone.getUser_comment() );
-        evaluateRespone.start_rating( respone.getStart_rating() );
+        evaluateRespone.star_rating( respone.getStar_rating() );
         evaluateRespone.create_date( respone.getCreate_date() );
 
         return evaluateRespone.build();
@@ -51,6 +51,6 @@ public class EvaluateMapperImpl implements EvaluateMapper {
         }
 
         evaluate.setUser_comment( request.getUser_comment() );
-        evaluate.setStart_rating( request.getStart_rating() );
+        evaluate.setStar_rating( request.getStar_rating() );
     }
 }

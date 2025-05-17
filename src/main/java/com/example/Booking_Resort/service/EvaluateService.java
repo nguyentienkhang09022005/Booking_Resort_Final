@@ -48,9 +48,13 @@ public class EvaluateService
                 () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
         );
         Evaluate evaluate = evaluateMapper.toEvaluate(request);
-        evaluate.setId_user(user);
-        evaluate.setId_rs(resort);
-        return evaluateMapper.toEvaluateRespone(evaluateRepository.save(evaluate));
+        evaluate.setIdUser(user);
+        evaluate.setIdRs(resort);
+        Evaluate saveEvaluate = evaluateRepository.save(evaluate);
+
+        var evaluateResponse = evaluateMapper.toEvaluateRespone(saveEvaluate);
+        evaluateResponse.setIdEvaluate(saveEvaluate.getId_evaluate());
+        return evaluateResponse;
     }
 
     // Hàm thay đổi đánh giá
@@ -60,7 +64,9 @@ public class EvaluateService
                 () -> new ApiException(ErrorCode.EVALUATE_NOT_FOUND)
         );
         evaluateMapper.updateEvaluate(evaluate, request);
-        return evaluateMapper.toEvaluateRespone(evaluateRepository.save(evaluate));
+        var evaluateResponse = evaluateMapper.toEvaluateRespone(evaluateRepository.save(evaluate));
+        evaluateResponse.setIdEvaluate(idEvaluate);
+        return evaluateResponse;
     }
 
     // Hàm xóa đánh giá

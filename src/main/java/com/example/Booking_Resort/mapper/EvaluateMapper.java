@@ -11,8 +11,8 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface EvaluateMapper
 {
-    @Mapping(target = "id_user", ignore = true)
-    @Mapping(target = "id_rs", ignore = true)
+    @Mapping(target = "idUser", ignore = true)
+    @Mapping(target = "idRs", ignore = true)
     Evaluate toEvaluate(EvaluateCreationRequest request);
 
     EvaluateRespone toEvaluateRespone(Evaluate respone);

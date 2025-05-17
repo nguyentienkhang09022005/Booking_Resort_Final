@@ -17,8 +17,9 @@ public class ResortResponse {
     String location_rs;
     String describe_rs;
     String image;
-    double start;
+    double star;
     boolean favorite;
     List<RoomRespone> rooms;
+    List<EvaluateRespone> evaluates;
 }
 

@@ -17,14 +17,14 @@ public class Evaluate
 
     @ManyToOne
     @JoinColumn(name = "id_rs", nullable = false)
-    private Resort id_rs;
+    private Resort idRs;
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
-    private User id_user;
+    private User idUser;
 
     private String user_comment;
-    private Double start_rating;
+    private Double star_rating;
 
     @CreationTimestamp
     @Column(name = "create_date", nullable = false)

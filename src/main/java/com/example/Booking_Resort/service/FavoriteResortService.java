@@ -13,11 +13,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,7 +34,6 @@ public class FavoriteResortService
 
         List<Favorite_Resort> favorites = favoriteResortRepository.findFavoriteResortsByUserId(idUser);
 
-        // Duyệt và set DTO thủ công
         List<FavoriteResortRespone> result = new ArrayList<>();
         for (Favorite_Resort fr : favorites) {
             Resort resort = fr.getId_rs();
@@ -57,10 +54,8 @@ public class FavoriteResortService
             dto.setCreated_at(fr.getCreated_at()); // thời gian yêu thích
             result.add(dto);
         }
-
         return result;
     }
-
 
     // Hàm tạo yêu thích
     public FavoriteResortRespone saveFavoriteResort(FavoriteResortRequest request)
@@ -83,10 +78,12 @@ public class FavoriteResortService
         favoriteResort.setId_rs(resort);
         favoriteResortRepository.save(favoriteResort);
 
-        Favorite_Resort saved = favoriteResortRepository.findById(favoriteResort.getId())
-                .orElseThrow(() -> new ApiException(ErrorCode.INTERNAL_SERVER_ERROR));
+        var favoriteResortRespone = new FavoriteResortRespone();
+        favoriteResortRespone.setResortId(resort.getIdRs());
+        favoriteResortRespone.setResortName(resort.getName_rs());
+        favoriteResortRespone.setCreated_at(LocalDateTime.now());
 
-        return favoriteResortMapper.toFavoriteResortResponse(saved);
+        return favoriteResortRespone;
     }
 
     // Hàm xóa yêu thích

@@ -11,8 +11,9 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EvaluateRespone {
+    String idEvaluate;
     String user_comment;
-    Double start_rating;
+    Double star_rating;
     LocalDate create_date;
 }
 

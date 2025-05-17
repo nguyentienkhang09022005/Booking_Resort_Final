@@ -1,40 +1,13 @@
 package com.example.Booking_Resort.mapper;
 
-import com.example.Booking_Resort.dto.response.FavoriteResortRespone;
-import com.example.Booking_Resort.models.Favorite_Resort;
-import com.example.Booking_Resort.models.Resort;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-17T16:50:09+0700",
+    date = "2025-05-17T18:26:11+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
 public class FavoriteResortMapperImpl implements FavoriteResortMapper {
-
-    @Override
-    public FavoriteResortRespone toFavoriteResortResponse(Favorite_Resort favorite_resort) {
-        if ( favorite_resort == null ) {
-            return null;
-        }
-
-        FavoriteResortRespone.FavoriteResortResponeBuilder favoriteResortRespone = FavoriteResortRespone.builder();
-
-        favoriteResortRespone.created_at( favorite_resort.getCreated_at() );
-
-        return favoriteResortRespone.build();
-    }
-
-    @Override
-    public FavoriteResortRespone ResortToFavoriteResortResponse(Resort resort) {
-        if ( resort == null ) {
-            return null;
-        }
-
-        FavoriteResortRespone.FavoriteResortResponeBuilder favoriteResortRespone = FavoriteResortRespone.builder();
-
-        return favoriteResortRespone.build();
-    }
 }
