@@ -22,7 +22,6 @@ public class Expense
     private String category;
     private BigDecimal amount;
 
-    @CreationTimestamp
     @Column(name = "create_date", updatable = false, nullable = false)
     private LocalDateTime create_date;
 }

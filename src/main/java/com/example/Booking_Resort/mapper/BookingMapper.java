@@ -13,6 +13,7 @@ public interface BookingMapper {
 
     @Mapping(target = "id_user", ignore = true)
     @Mapping(target = "id_room", ignore = true)
+    @Mapping(target = "create_date", ignore = true)
     Booking_room toBookingRoom(BookingRoomRequest request);
 
     BookingRoomRespone toBookingRespone(Booking_room bookingRoom);

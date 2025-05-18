@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,4 +22,5 @@ public class MonthlyReportResponse {
     private BigDecimal totalExpense;
     private BigDecimal netProfit;
     private LocalDateTime generatedAt;
+    private List<DetailReportResponse> details;
 }

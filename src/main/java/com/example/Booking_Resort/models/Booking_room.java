@@ -28,7 +28,6 @@ public class Booking_room
     private LocalDateTime checkoutday;
     private BigDecimal total_amount;
 
-    @CreationTimestamp
     @Column(name = "create_date", updatable = false)
     private LocalDateTime create_date;
 

@@ -52,6 +52,12 @@ public enum ErrorCode
     PERMISSIONS_NOT_FOUND("PERMISSIONS_001", "Permissions not found", HttpStatus.NOT_FOUND),
     PERMISSIONS_EXISTS("PERMISSIONS_002", "Permissions already exists", HttpStatus.BAD_REQUEST),
 
+    // Lỗi báo cáo
+    REPORT_NOT_FOUND("REPORT_001", "Report not found", HttpStatus.NOT_FOUND),
+
+    // Lỗi chi tiết báo cáo
+    DETAIL_REPORT_NOT_FOUND("DETAIL_REPORT_001", "Detail report not found", HttpStatus.NOT_FOUND),
+
     // Lỗi opt
     OTP_NOT_EXIST_FOR_EMAIL("OTP_001", "OTP not exist for email", HttpStatus.INTERNAL_SERVER_ERROR),
 

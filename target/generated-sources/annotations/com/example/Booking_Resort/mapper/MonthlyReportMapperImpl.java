@@ -2,6 +2,7 @@ package com.example.Booking_Resort.mapper;
 
 import com.example.Booking_Resort.dto.request.MonthlyReportCreationRequest;
 import com.example.Booking_Resort.dto.request.MonthlyReportUpdateRequest;
+import com.example.Booking_Resort.dto.response.DetailReportResponse;
 import com.example.Booking_Resort.dto.response.MonthlyReportResponse;
 import com.example.Booking_Resort.models.Detail_Report;
 import com.example.Booking_Resort.models.Monthly_Report;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-17T18:26:11+0700",
+    date = "2025-05-19T01:54:44+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
@@ -51,6 +52,7 @@ public class MonthlyReportMapperImpl implements MonthlyReportMapper {
         monthlyReportResponse.totalExpense( report.getTotalExpense() );
         monthlyReportResponse.netProfit( report.getNetProfit() );
         monthlyReportResponse.generatedAt( report.getGeneratedAt() );
+        monthlyReportResponse.details( detail_ReportListToDetailReportResponseList( report.getDetails() ) );
 
         return monthlyReportResponse.build();
     }
@@ -79,5 +81,32 @@ public class MonthlyReportMapperImpl implements MonthlyReportMapper {
                 report.setDetails( new ArrayList<Detail_Report>( list ) );
             }
         }
+    }
+
+    protected DetailReportResponse detail_ReportToDetailReportResponse(Detail_Report detail_Report) {
+        if ( detail_Report == null ) {
+            return null;
+        }
+
+        DetailReportResponse.DetailReportResponseBuilder detailReportResponse = DetailReportResponse.builder();
+
+        detailReportResponse.type( detail_Report.getType() );
+        detailReportResponse.amount( detail_Report.getAmount() );
+        detailReportResponse.createDate( detail_Report.getCreateDate() );
+
+        return detailReportResponse.build();
+    }
+
+    protected List<DetailReportResponse> detail_ReportListToDetailReportResponseList(List<Detail_Report> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<DetailReportResponse> list1 = new ArrayList<DetailReportResponse>( list.size() );
+        for ( Detail_Report detail_Report : list ) {
+            list1.add( detail_ReportToDetailReportResponse( detail_Report ) );
+        }
+
+        return list1;
     }
 }
