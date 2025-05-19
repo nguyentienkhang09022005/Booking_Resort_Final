@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,6 +34,18 @@ public class ExpenseService {
     ExpenseMapper expenseMapper;
     ResortRepository resortRepository;
     MonthlyReportRepository monthlyReportRepository;
+
+    // Lấy danh sách chi tiêu
+    public List<ExpenseResponse> listExpenses(String idResort)
+    {
+        List<Expense> expenses = expenseRepository.findByIdResort_IdRs(idResort);
+        if (expenses.isEmpty()) {
+            throw new ApiException(ErrorCode.RESORT_NOT_FOUND);
+        }
+        return expenses.stream()
+                .map(expenseMapper::toExpenseResponse)
+                .collect(Collectors.toList());
+    }
 
     // Hàm lưu chi tiêu xuống csdl
     public ExpenseResponse saveExpense(ExpenseCreationRequest request)

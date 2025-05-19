@@ -18,7 +18,7 @@ public class Booking_room
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
-    private User id_user;
+    private User idUser;
 
     @ManyToOne
     @JoinColumn(name = "id_room", nullable = false)

@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,6 +37,40 @@ public class BookingService
     BookingMapper bookingMapper;
     MonthlyReportRepository monthlyReportRepository;
 
+    // Hàm lấy thông tin booking
+    public List<BookingRoomRespone> getListBookingRoom(String idUser)
+    {
+        List<Booking_room> bookingRooms = bookingRoomRepository.findByIdUser_IdUser(idUser);
+        if (bookingRooms.isEmpty()) {
+            throw new ApiException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        return bookingRooms
+                .stream()
+                .map(bookingRoom -> {
+                    // Truy vấn booking_service theo id_user
+                    List<Booking_Service> services = bookingServiceRepository
+                            .findByIdUser(bookingRoom.getIdUser());
+
+                    List<BookingServiceResponse> serviceDtos = services.stream()
+                            .map(service -> BookingServiceResponse.builder()
+                                    .nameService(service.getIdSV().getName_sv())
+                                    .quantity(service.getQuantity())
+                                    .total_amount(service.getTotal_amount())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    return BookingRoomRespone.builder()
+                            .checkinday(bookingRoom.getCheckinday())
+                            .checkoutday(bookingRoom.getCheckoutday())
+                            .total_amount(bookingRoom.getTotal_amount())
+                            .status(bookingRoom.getStatus())
+                            .services(serviceDtos)
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
     // Hàm lưu phòng được đặt xuống csdl
     public BookingRoomRespone saveBookingRoom(BookingRoomRequest request) {
         User user = userRepository.findById(request.getId_user()).orElseThrow(
@@ -49,7 +84,7 @@ public class BookingService
 
         Booking_room bookingRoom = bookingMapper.toBookingRoom(request);
         bookingRoom.setId_room(room);
-        bookingRoom.setId_user(user);
+        bookingRoom.setIdUser(user);
         bookingRoom.setCreate_date(now);
 
         // Biến tính tổng tiền phòng + dịch vụ
@@ -88,6 +123,14 @@ public class BookingService
             // Lưu tất cả dịch vụ vào cơ sở dữ liệu
             bookingServiceRepository.saveAll(bookingServices);
 
+            // Map sang response DTO
+            serviceResponses = bookingServices.stream()
+                    .map(bs -> BookingServiceResponse.builder()
+                            .nameService(bs.getIdSV().getName_sv())
+                            .quantity(bs.getQuantity())
+                            .total_amount(bs.getTotal_amount())
+                            .build())
+                    .collect(Collectors.toList());
         }
         bookingRoom.setTotal_amount(totalAmount); // Lưu tổng tiền đã cộng với dịch vụ
         bookingRoom = bookingRoomRepository.save(bookingRoom);
@@ -124,13 +167,9 @@ public class BookingService
         report.setNetProfit(report.getTotalRevenue().subtract(report.getTotalExpense()));
         monthlyReportRepository.save(report);
 
-        return bookingMapper.toBookingRespone(bookingRoom);
-    }
-
-    // Hàm lấy thông tin booking
-    public List<Booking_room> getListBookingRoom()
-    {
-        return bookingRoomRepository.findAll();
+        var bookingResponse = bookingMapper.toBookingRespone(bookingRoom);
+        bookingResponse.setServices(serviceResponses);
+        return bookingResponse;
     }
 
     // Hàm sửa đặt phòng
@@ -154,9 +193,11 @@ public class BookingService
         BigDecimal roomPrice = bookingRoom.getId_room().getPrice();
         BigDecimal totalAmount = roomPrice;
 
+        List<BookingServiceResponse> serviceResponses = new ArrayList<>();
+
         if (request.getServices() != null && !request.getServices().isEmpty()) {
             // Xóa dịch vụ cũ
-            bookingServiceRepository.deleteByIdUser(bookingRoom.getId_user());
+            bookingServiceRepository.deleteByIdUser(bookingRoom.getIdUser());
 
             // Thêm danh sách dịch vụ mới
             List<Booking_Service> newServices = new ArrayList<>();
@@ -168,7 +209,7 @@ public class BookingService
 
                 Booking_Service bookingService = new Booking_Service();
                 bookingService.setIdSV(service);
-                bookingService.setIdUser(bookingRoom.getId_user());
+                bookingService.setIdUser(bookingRoom.getIdUser());
                 bookingService.setQuantity(serviceReq.getQuantity());
                 bookingService.setTotal_amount(serviceAmount);
 
@@ -176,6 +217,14 @@ public class BookingService
                 newServices.add(bookingService);
             }
             bookingServiceRepository.saveAll(newServices);
+
+            serviceResponses = newServices.stream()
+                    .map(bs -> BookingServiceResponse.builder()
+                            .nameService(bs.getIdSV().getName_sv())
+                            .quantity(bs.getQuantity())
+                            .total_amount(bs.getTotal_amount())
+                            .build())
+                    .collect(Collectors.toList());
         }
 
         // Cập nhật lại tổng tiền và lưu bookingRoom
@@ -212,7 +261,9 @@ public class BookingService
         report.setNetProfit(updatedRevenue.subtract(report.getTotalExpense()));
         monthlyReportRepository.save(report);
 
-        return bookingMapper.toBookingRespone(updatedBooking);
+        var serviceResponse = bookingMapper.toBookingRespone(updatedBooking);
+        serviceResponse.setServices(serviceResponses);
+        return serviceResponse;
     }
 
     // Hàm xóa đặt phòng
@@ -230,7 +281,7 @@ public class BookingService
         int year = createDate.getYear();
 
         // Xóa booking service
-        bookingServiceRepository.deleteByIdUser(bookingRoom.getId_user());
+        bookingServiceRepository.deleteByIdUser(bookingRoom.getIdUser());
 
         // Tìm báo cáo
         Monthly_Report report = monthlyReportRepository

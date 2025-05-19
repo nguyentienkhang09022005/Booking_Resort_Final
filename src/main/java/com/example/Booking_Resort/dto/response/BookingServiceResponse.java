@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingServiceResponse {
+    String nameService;
     Integer quantity;
     BigDecimal total_amount;
 }

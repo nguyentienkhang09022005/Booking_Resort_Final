@@ -4,7 +4,6 @@ import com.example.Booking_Resort.dto.request.BookingRoomRequest;
 import com.example.Booking_Resort.dto.request.BookingRoomUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
 import com.example.Booking_Resort.dto.response.BookingRoomRespone;
-import com.example.Booking_Resort.models.Booking_room;
 import com.example.Booking_Resort.service.BookingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +23,11 @@ public class BookingRoomController
     BookingService bookingService;
 
     // Endpoint lấy danh sách phòng được đặt
-    @GetMapping("/list_bookingroom")
-    public ApiRespone<List<Booking_room>> getAllResort()
+    @GetMapping("/list_bookingroom/{idUser}")
+    public ApiRespone<List<BookingRoomRespone>> getAllResort(@PathVariable String idUser)
     {
-        return ApiRespone.<List<Booking_room>>builder()
-                .data(bookingService.getListBookingRoom())
+        return ApiRespone.<List<BookingRoomRespone>>builder()
+                .data(bookingService.getListBookingRoom(idUser))
                 .build();
     }
 

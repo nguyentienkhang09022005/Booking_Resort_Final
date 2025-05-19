@@ -17,5 +17,6 @@ public class BookingRoomRespone {
     LocalDateTime checkoutday;
     BigDecimal total_amount;
     String status;
+    List<BookingServiceResponse> services;
 }
 

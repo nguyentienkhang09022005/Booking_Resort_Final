@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
 
-    @Mapping(target = "id_user", ignore = true)
+    @Mapping(target = "idUser", ignore = true)
     @Mapping(target = "id_room", ignore = true)
     @Mapping(target = "create_date", ignore = true)
     Booking_room toBookingRoom(BookingRoomRequest request);
