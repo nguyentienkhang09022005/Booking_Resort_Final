@@ -7,10 +7,7 @@ import com.example.Booking_Resort.exception.ApiException;
 import com.example.Booking_Resort.exception.ErrorCode;
 import com.example.Booking_Resort.impl.UploadImageFile;
 import com.example.Booking_Resort.mapper.RoomMapper;
-import com.example.Booking_Resort.models.Image;
-import com.example.Booking_Resort.models.Resort;
-import com.example.Booking_Resort.models.Room;
-import com.example.Booking_Resort.models.Type_Room;
+import com.example.Booking_Resort.models.*;
 import com.example.Booking_Resort.repository.ImageRepository;
 import com.example.Booking_Resort.repository.ResortRepository;
 import com.example.Booking_Resort.repository.RoomRepository;
@@ -40,8 +37,11 @@ public class RoomService
     ImageRepository imageRepository;
 
     // Hàm lấy danh sách phòng
-    public List<RoomRespone> getAllRoom() {
-        List<Room> rooms = roomRepository.findAll();
+    public List<RoomRespone> getAllRoom(String idResort) {
+        List<Room> rooms = roomRepository.findByIdRs_IdRs(idResort);
+        if (rooms.isEmpty()) {
+            throw new ApiException(ErrorCode.RESORT_NOT_FOUND);
+        }
 
         return rooms.stream().map(room -> {
             Image image = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom());

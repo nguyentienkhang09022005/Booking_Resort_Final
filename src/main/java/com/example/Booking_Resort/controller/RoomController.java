@@ -25,11 +25,11 @@ public class RoomController {
     RoomService roomService;
 
     // Endpoint lấy danh sách phòng
-    @GetMapping("/list_room")
-    public ApiRespone<List<RoomRespone>> getAllRoom()
+    @GetMapping("/list_room/{idResort}")
+    public ApiRespone<List<RoomRespone>> getAllRoom(@PathVariable String idResort)
     {
         return ApiRespone.<List<RoomRespone>>builder()
-                .data(roomService.getAllRoom())
+                .data(roomService.getAllRoom(idResort))
                 .build();
     }
 
