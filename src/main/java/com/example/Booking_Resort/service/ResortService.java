@@ -179,9 +179,42 @@ public class ResortService {
                 () -> new ApiException(ErrorCode.USER_NOT_FOUND)
         );
 
+        // Lấy danh sách phòng thuộc resort
+        List<Room> rooms = roomRepository.findByIdRs_IdRs(resort.getIdRs());
+
+        // Lấy danh sách đánh giá thuộc resort
+        List<Evaluate> evaluates = evaluateRepository.findByIdRs_IdRs(resort.getIdRs());
+
+        List<EvaluateRespone> evaluationResponses = evaluates.stream().map(evaluate -> {
+            User user = evaluate.getIdUser();
+            return EvaluateRespone.builder()
+                    .idEvaluate(evaluate.getId_evaluate())
+                    .user_comment(evaluate.getUser_comment())
+                    .star_rating(evaluate.getStar_rating())
+                    .create_date(evaluate.getCreate_date())
+                    .build();
+        }).collect(Collectors.toList());
+
+        // Map sang RoomRespone
+        List<RoomRespone> roomResponses = rooms.stream().map(room -> {
+            Image roomImage = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom());
+
+            return RoomRespone.builder()
+                    .idRoom(room.getIdRoom())
+                    .name_room(room.getName_room())
+                    .type_room(room.getId_type().getNameType())
+                    .price(room.getPrice())
+                    .status(room.getStatus())
+                    .describe_room(room.getDescribe_room())
+                    .image(roomImage != null ? roomImage.getUrl() : null)
+                    .build();
+        }).collect(Collectors.toList());
+
         var resortResponse = resortMapper.toResortRespone(resort);
         boolean isFavorite = favoriteResortRepository.existsByIdUser_IdUserAndIdResort_IdRs(idUser, idResort);
         resortResponse.setFavorite(isFavorite);
+        resortResponse.setRooms(roomResponses);
+        resortResponse.setEvaluates(evaluationResponses);
         resortResponse.setImage(resort.getImages().get(0).getUrl());
         return resortResponse;
     }
