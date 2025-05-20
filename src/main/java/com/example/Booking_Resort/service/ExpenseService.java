@@ -47,6 +47,15 @@ public class ExpenseService {
                 .collect(Collectors.toList());
     }
 
+    //  Lấy thông tin chi tiêu
+    public ExpenseResponse infExpense(String idExpense)
+    {
+        Expense expense = expenseRepository.findById(idExpense).orElseThrow(
+                () -> new ApiException(ErrorCode.EXPENSE_NOT_FOUND)
+        );
+        return expenseMapper.toExpenseResponse(expense);
+    }
+
     // Hàm lưu chi tiêu xuống csdl
     public ExpenseResponse saveExpense(ExpenseCreationRequest request)
     {

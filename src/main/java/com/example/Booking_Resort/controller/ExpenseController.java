@@ -31,6 +31,15 @@ public class ExpenseController
                 .build();
     }
 
+    // Endpoint lấy thông tin chi tiêu
+    @GetMapping("/inf_Expense/{idExpense}")
+    public ApiRespone<ExpenseResponse> getInfExpense(@PathVariable String idExpense)
+    {
+        return ApiRespone.<ExpenseResponse>builder()
+                .data(expenseService.infExpense(idExpense))
+                .build();
+    }
+
     // Endpoint tạo chi tiêu
     @PostMapping("/create_expense")
     public ApiRespone<ExpenseResponse> createExpense(@RequestBody ExpenseCreationRequest request)

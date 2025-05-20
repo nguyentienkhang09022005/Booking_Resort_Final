@@ -152,6 +152,9 @@ public class RoomService
         Room room = roomRepository.findById(idroom).orElseThrow(
                 () -> new ApiException(ErrorCode.ROOM_NOT_FOUND)
         );
-        return roomMapper.toRoomRespone(room);
+
+        var romResponse = roomMapper.toRoomRespone(room);
+        romResponse.setImage(room.getImages().get(0).getUrl());
+        return romResponse;
     }
 }
