@@ -49,12 +49,12 @@ public class ResortController {
     }
 
     // Endpont lấy thông tin resort
-    @GetMapping("/{idResort}")
-    public ApiRespone<ResortResponse> getInfResort(@PathVariable String idResort)
+    @GetMapping("/{idResort}/{idUser}")
+    public ApiRespone<ResortResponse> getInfResort(@PathVariable String idResort, @PathVariable String idUser)
     {
         return ApiRespone.<ResortResponse>builder()
                 .message("successful get information of resort")
-                .data(resortService.getInfResort(idResort))
+                .data(resortService.getInfResort(idResort, idUser))
                 .build();
     }
 

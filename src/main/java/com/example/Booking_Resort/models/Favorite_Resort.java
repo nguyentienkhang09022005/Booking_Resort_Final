@@ -17,12 +17,12 @@ public class Favorite_Resort
     @ManyToOne
     @MapsId("id_user")
     @JoinColumn(name = "id_user", nullable = false)
-    private User id_user;
+    private User idUser;
 
     @ManyToOne
     @MapsId("id_rs")
     @JoinColumn(name = "id_rs", nullable = false)
-    private Resort id_rs;
+    private Resort idResort;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

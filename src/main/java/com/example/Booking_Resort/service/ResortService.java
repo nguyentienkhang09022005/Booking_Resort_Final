@@ -170,11 +170,18 @@ public class ResortService {
     }
 
     // Hàm lấy thông tin resort
-    public ResortResponse getInfResort(String idresort)
+    public ResortResponse getInfResort(String idResort, String idUser)
     {
-        Resort resort = resortRepository.findById(idresort).orElseThrow(
+        Resort resort = resortRepository.findById(idResort).orElseThrow(
                 () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
         );
-        return resortMapper.toResortRespone(resort);
+        userRepository.findById(idUser).orElseThrow(
+                () -> new ApiException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        var resortResponse = resortMapper.toResortRespone(resort);
+        boolean isFavorite = favoriteResortRepository.existsByIdUser_IdUserAndIdResort_IdRs(idUser, idResort);
+        resortResponse.setFavorite(isFavorite);
+        return resortResponse;
     }
 }

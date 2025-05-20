@@ -36,7 +36,7 @@ public class FavoriteResortService
 
         List<FavoriteResortRespone> result = new ArrayList<>();
         for (Favorite_Resort fr : favorites) {
-            Resort resort = fr.getId_rs();
+            Resort resort = fr.getIdResort();
 
             FavoriteResortRespone dto = new FavoriteResortRespone();
             dto.setResortId(resort.getIdRs());
@@ -74,8 +74,8 @@ public class FavoriteResortService
         key.setId_user(request.getId_user());
 
         favoriteResort.setId(key);
-        favoriteResort.setId_user(user);
-        favoriteResort.setId_rs(resort);
+        favoriteResort.setIdUser(user);
+        favoriteResort.setIdResort(resort);
         favoriteResortRepository.save(favoriteResort);
 
         var favoriteResortRespone = new FavoriteResortRespone();

@@ -16,6 +16,8 @@ public interface FavoriteResortRepository extends JpaRepository<Favorite_Resort,
     @Query(value = "SELECT id_rs FROM favorite_resort WHERE id_user = :idUser", nativeQuery = true)
     List<String> findFavoriteResortIdsByUserId(@Param("idUser") String idUser);
 
-    @Query("SELECT fr FROM Favorite_Resort fr JOIN FETCH fr.id_rs WHERE fr.id_user.idUser = :userId")
+    @Query("SELECT fr FROM Favorite_Resort fr JOIN FETCH fr.idResort WHERE fr.idUser.idUser = :userId")
     List<Favorite_Resort> findFavoriteResortsByUserId(@Param("userId") String userId);
+
+    Boolean existsByIdUser_IdUserAndIdResort_IdRs(String idUser, String idResort);
 }
