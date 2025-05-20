@@ -182,6 +182,7 @@ public class ResortService {
         var resortResponse = resortMapper.toResortRespone(resort);
         boolean isFavorite = favoriteResortRepository.existsByIdUser_IdUserAndIdResort_IdRs(idUser, idResort);
         resortResponse.setFavorite(isFavorite);
+        resortResponse.setImage(resort.getImages().get(0).getUrl());
         return resortResponse;
     }
 }
