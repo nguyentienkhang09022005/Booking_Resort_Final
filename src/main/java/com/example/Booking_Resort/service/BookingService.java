@@ -71,6 +71,32 @@ public class BookingService
                 .collect(Collectors.toList());
     }
 
+    // Hàm lấy thông tin chi tiết đặt phòng
+    public BookingRoomRespone getInfBookingRoom(String idBookingRoom)
+    {
+        Booking_room bookingRoom = bookingRoomRepository.findById(idBookingRoom).orElseThrow(
+                () -> new ApiException(ErrorCode.BOOKING_ROOM_NOT_FOUND)
+        );
+
+        List<Booking_Service> services = bookingServiceRepository.findByIdUser(bookingRoom.getIdUser());
+
+        List<BookingServiceResponse> listService = services.stream()
+                .map(service -> BookingServiceResponse.builder()
+                        .nameService(service.getIdSV().getName_sv())
+                        .quantity(service.getQuantity())
+                        .total_amount(service.getTotal_amount())
+                        .build())
+                .collect(Collectors.toList());
+
+        return BookingRoomRespone.builder()
+                .checkinday(bookingRoom.getCheckinday())
+                .checkoutday(bookingRoom.getCheckoutday())
+                .total_amount(bookingRoom.getTotal_amount())
+                .status(bookingRoom.getStatus())
+                .services(listService)
+                .build();
+    }
+
     // Hàm lưu phòng được đặt xuống csdl
     public BookingRoomRespone saveBookingRoom(BookingRoomRequest request) {
         User user = userRepository.findById(request.getId_user()).orElseThrow(

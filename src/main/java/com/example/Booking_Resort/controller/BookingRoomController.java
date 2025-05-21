@@ -31,6 +31,15 @@ public class BookingRoomController
                 .build();
     }
 
+    // Endpoint lấy thông tin phòng được đặt
+    @GetMapping("/inf_bookingroom/{idBookingRoom}")
+    public ApiRespone<BookingRoomRespone> infBookingRoom(@PathVariable String idBookingRoom)
+    {
+        return ApiRespone.<BookingRoomRespone>builder()
+                .data(bookingService.getInfBookingRoom(idBookingRoom))
+                .build();
+    }
+
     // Endpoint đặt phòng
     @PostMapping("/create_bookingroom")
     public ApiRespone<BookingRoomRespone> createBookingRoom(@RequestBody BookingRoomRequest request)
