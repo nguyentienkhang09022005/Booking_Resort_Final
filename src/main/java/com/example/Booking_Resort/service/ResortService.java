@@ -218,4 +218,64 @@ public class ResortService {
         resortResponse.setImage(resort.getImages().get(0).getUrl());
         return resortResponse;
     }
+
+    // Hàm lấy danh sách resort đã tạo
+    public List<ResortResponse> getInfResorCreated(String idOwner)
+    {
+        User owner = userRepository.findById(idOwner).orElseThrow(
+                () -> new ApiException(ErrorCode.USER_NOT_FOUND)
+        );
+        List<Resort> resorts = resortRepository.findByIdOwner_IdUser(owner.getIdUser());
+
+        List<String> favoriteResortIds = favoriteResortRepository.findFavoriteResortIdsByUserId(idOwner);
+
+        return resorts.stream().map(resort -> {
+            Image image = imageRepository.findFirstByIdRs_IdRs(resort.getIdRs());
+            Double avgRating = evaluateRepository.getAverageStartRatingByResort(resort.getIdRs());
+            double star = avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0;
+
+            // Lấy danh sách phòng thuộc resort
+            List<Room> rooms = roomRepository.findByIdRs_IdRs(resort.getIdRs());
+
+            // Lấy danh sách đánh giá thuộc resort
+            List<Evaluate> evaluates = evaluateRepository.findByIdRs_IdRs(resort.getIdRs());
+
+            List<EvaluateRespone> evaluationResponses = evaluates.stream().map(evaluate -> {
+                User user = evaluate.getIdUser();
+                return EvaluateRespone.builder()
+                        .idEvaluate(evaluate.getId_evaluate())
+                        .user_comment(evaluate.getUser_comment())
+                        .star_rating(evaluate.getStar_rating())
+                        .create_date(evaluate.getCreate_date())
+                        .build();
+            }).collect(Collectors.toList());
+
+            // Map sang RoomRespone
+            List<RoomRespone> roomResponses = rooms.stream().map(room -> {
+                Image roomImage = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom());
+
+                return RoomRespone.builder()
+                        .idRoom(room.getIdRoom())
+                        .name_room(room.getName_room())
+                        .type_room(room.getId_type().getNameType())
+                        .price(room.getPrice())
+                        .status(room.getStatus())
+                        .describe_room(room.getDescribe_room())
+                        .image(roomImage != null ? roomImage.getUrl() : null)
+                        .build();
+            }).collect(Collectors.toList());
+
+            return ResortResponse.builder()
+                    .idRs(resort.getIdRs())
+                    .name_rs(resort.getName_rs())
+                    .location_rs(resort.getLocation_rs())
+                    .describe_rs(resort.getDescribe_rs())
+                    .image(image != null ? image.getUrl() : null)
+                    .star(star)
+                    .favorite(favoriteResortIds.contains(resort.getIdRs()))
+                    .rooms(roomResponses)
+                    .evaluates(evaluationResponses)
+                    .build();
+        }).collect(Collectors.toList());
+    }
 }

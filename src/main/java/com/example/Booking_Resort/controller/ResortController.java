@@ -35,16 +35,12 @@ public class ResortController {
                 .build();
     }
 
-    // Endpoint tạo resort
-    @PreAuthorize("hasAuthority('CREATE_RESORT')")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiRespone<ResortResponse> createResort(@RequestPart("request") ResortCreationRequest request,
-                                                   @RequestPart(value = "file", required = false) MultipartFile file)
+    // Endpoint lấy danh sách resort đã tạo
+    @GetMapping("/list_resort_created/{idOwner}")
+    public ApiRespone<List<ResortResponse>> getAllResortCreated(@PathVariable String idOwner)
     {
-        request.setImage(file);
-        return ApiRespone.<ResortResponse>builder()
-                .message("successful creation")
-                .data(resortService.saveResort(request))
+        return ApiRespone.<List<ResortResponse>>builder()
+                .data(resortService.getInfResorCreated(idOwner))
                 .build();
     }
 
@@ -55,6 +51,19 @@ public class ResortController {
         return ApiRespone.<ResortResponse>builder()
                 .message("successful get information of resort")
                 .data(resortService.getInfResort(idResort, idUser))
+                .build();
+    }
+
+    // Endpoint tạo resort
+    @PreAuthorize("hasAuthority('CREATE_RESORT')")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiRespone<ResortResponse> createResort(@RequestPart("request") ResortCreationRequest request,
+                                                   @RequestPart(value = "file", required = false) MultipartFile file)
+    {
+        request.setImage(file);
+        return ApiRespone.<ResortResponse>builder()
+                .message("successful creation")
+                .data(resortService.saveResort(request))
                 .build();
     }
 
