@@ -24,11 +24,11 @@ public class ServiceRSController
     ServiceRSService serviceRSService;
 
     // Endpoint lấy danh sách service
-    @GetMapping("/list_service")
-    public ApiRespone<List<ServiceRS>> getAllService()
+    @GetMapping("/list_service/{idResort}")
+    public ApiRespone<List<ServiceRSResponse>> getAllService(@PathVariable String idResort)
     {
-        return ApiRespone.<List<ServiceRS>>builder()
-                .data(serviceRSService.getAllService())
+        return ApiRespone.<List<ServiceRSResponse>>builder()
+                .data(serviceRSService.getAllService(idResort))
                 .build();
     }
 

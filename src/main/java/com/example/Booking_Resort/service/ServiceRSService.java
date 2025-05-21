@@ -3,11 +3,14 @@ package com.example.Booking_Resort.service;
 import com.example.Booking_Resort.dto.request.ServiceRSCreationRequest;
 import com.example.Booking_Resort.dto.request.ServiceRSUpdateRequest;
 import com.example.Booking_Resort.dto.response.ResortResponse;
+import com.example.Booking_Resort.dto.response.RoomRespone;
 import com.example.Booking_Resort.dto.response.ServiceRSResponse;
 import com.example.Booking_Resort.exception.ApiException;
 import com.example.Booking_Resort.exception.ErrorCode;
 import com.example.Booking_Resort.mapper.ServiceRSMapper;
+import com.example.Booking_Resort.models.Image;
 import com.example.Booking_Resort.models.Resort;
+import com.example.Booking_Resort.models.Room;
 import com.example.Booking_Resort.models.ServiceRS;
 import com.example.Booking_Resort.repository.ResortRepository;
 import com.example.Booking_Resort.repository.ServiceRSRepository;
@@ -19,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,9 +35,21 @@ public class ServiceRSService
     ServiceRSMapper serviceRSMapper;
 
     // Hàm lấy danh sách dịch vụ
-    public List<ServiceRS> getAllService()
+    public List<ServiceRSResponse> getAllService(String idResort)
     {
-        return this.serviceRSRepository.findAll();
+        List<ServiceRS> services = serviceRSRepository.findByIdRs_IdRs(idResort);
+        if (services.isEmpty()) {
+            throw new ApiException(ErrorCode.SERVICE_NOT_FOUND);
+        }
+
+        return services.stream()
+                .map( service -> ServiceRSResponse.builder()
+                    .idService(service.getId_sv())
+                    .name_sv(service.getName_sv())
+                    .price(service.getPrice())
+                    .describe_service(service.getDescribe_service())
+                    .build()
+        ).collect(Collectors.toList());
     }
 
     // Hàm thêm dịch vụ
@@ -44,8 +60,10 @@ public class ServiceRSService
         );
 
         ServiceRS service = serviceRSMapper.toServiceRS(request);
-        service.setId_rs(resort);
-        return serviceRSMapper.toServiceRSResponse(serviceRSRepository.save(service));
+        service.setIdRs(resort);
+        ServiceRSResponse serviceRSResponse = serviceRSMapper.toServiceRSResponse(serviceRSRepository.save(service));
+        serviceRSResponse.setIdService(service.getId_sv());
+        return  serviceRSResponse;
     }
 
     // Hàm sửa dịch vụ

@@ -11,7 +11,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface ServiceRSMapper {
 
-    @Mapping(target = "id_rs", ignore = true)
+    @Mapping(target = "idRs", ignore = true)
     ServiceRS toServiceRS(ServiceRSCreationRequest request);
 
     ServiceRSResponse toServiceRSResponse(ServiceRS serviceRS);

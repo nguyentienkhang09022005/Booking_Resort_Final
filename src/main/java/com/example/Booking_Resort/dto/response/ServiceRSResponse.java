@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ServiceRSResponse
 {
+    String idService;
     String name_sv;
     BigDecimal price;
     String describe_service;

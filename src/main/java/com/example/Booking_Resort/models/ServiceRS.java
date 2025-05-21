@@ -16,7 +16,7 @@ public class ServiceRS
 
     @ManyToOne
     @JoinColumn(name = "id_rs", nullable = false)
-    private Resort id_rs;
+    private Resort idRs;
 
     private String name_sv;
     private BigDecimal price;
