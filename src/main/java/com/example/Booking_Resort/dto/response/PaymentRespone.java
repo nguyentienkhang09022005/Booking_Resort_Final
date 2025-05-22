@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentRespone {
+    String idPayment;
     BigDecimal money;
     LocalDateTime create_date;
-    String status;
     String payment_method;
 }
 

@@ -61,6 +61,7 @@ public class BookingService
                             .collect(Collectors.toList());
 
                     return BookingRoomRespone.builder()
+                            .idBr(bookingRoom.getIdBr())
                             .checkinday(bookingRoom.getCheckinday())
                             .checkoutday(bookingRoom.getCheckoutday())
                             .total_amount(bookingRoom.getTotal_amount())
@@ -89,6 +90,7 @@ public class BookingService
                 .collect(Collectors.toList());
 
         return BookingRoomRespone.builder()
+                .idBr(bookingRoom.getIdBr())
                 .checkinday(bookingRoom.getCheckinday())
                 .checkoutday(bookingRoom.getCheckoutday())
                 .total_amount(bookingRoom.getTotal_amount())
@@ -96,6 +98,8 @@ public class BookingService
                 .services(listService)
                 .build();
     }
+
+    // Hàm lấy danh sách đặt phòng của mỗi resort
 
     // Hàm lưu phòng được đặt xuống csdl
     public BookingRoomRespone saveBookingRoom(BookingRoomRequest request) {
@@ -194,6 +198,7 @@ public class BookingService
         monthlyReportRepository.save(report);
 
         var bookingResponse = bookingMapper.toBookingRespone(bookingRoom);
+        bookingResponse.setIdBr(bookingRoom.getIdBr());
         bookingResponse.setServices(serviceResponses);
         return bookingResponse;
     }
@@ -287,9 +292,10 @@ public class BookingService
         report.setNetProfit(updatedRevenue.subtract(report.getTotalExpense()));
         monthlyReportRepository.save(report);
 
-        var serviceResponse = bookingMapper.toBookingRespone(updatedBooking);
-        serviceResponse.setServices(serviceResponses);
-        return serviceResponse;
+        var bookingRespone = bookingMapper.toBookingRespone(updatedBooking);
+        bookingRespone.setIdBr(updatedBooking.getIdBr());
+        bookingRespone.setServices(serviceResponses);
+        return bookingRespone;
     }
 
     // Hàm xóa đặt phòng

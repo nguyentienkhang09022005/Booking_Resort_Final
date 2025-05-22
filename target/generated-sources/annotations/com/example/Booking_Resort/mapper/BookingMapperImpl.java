@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-22T01:27:02+0700",
+    date = "2025-05-22T21:38:14+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
@@ -37,6 +37,7 @@ public class BookingMapperImpl implements BookingMapper {
 
         BookingRoomRespone.BookingRoomResponeBuilder bookingRoomRespone = BookingRoomRespone.builder();
 
+        bookingRoomRespone.idBr( bookingRoom.getIdBr() );
         bookingRoomRespone.checkinday( bookingRoom.getCheckinday() );
         bookingRoomRespone.checkoutday( bookingRoom.getCheckoutday() );
         bookingRoomRespone.total_amount( bookingRoom.getTotal_amount() );

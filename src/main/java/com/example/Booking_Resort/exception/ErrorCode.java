@@ -34,6 +34,7 @@ public enum ErrorCode
 
     // Lỗi Booking_room
     BOOKING_ROOM_NOT_FOUND("BOOKING_ROOM_001", "Booking room not found", HttpStatus.NOT_FOUND),
+    BOOKING_CONFIRMED_CANNOT_DELETE_PAYMENT("BOOKING_ROOM_002", "Booking room cant not delete", HttpStatus.CONFLICT),
 
     // Lỗi Payment
     PAYMENT_NOT_FOUND("PAYMENT_001", "Payment not found", HttpStatus.NOT_FOUND),

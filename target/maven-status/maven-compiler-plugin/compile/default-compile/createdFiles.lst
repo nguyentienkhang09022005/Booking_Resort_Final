@@ -53,7 +53,6 @@ com\example\Booking_Resort\dto\request\LogoutRequest$LogoutRequestBuilder.class
 com\example\Booking_Resort\dto\response\DetailReportResponse.class
 com\example\Booking_Resort\dto\request\ChangePasswordRequest$ChangePasswordRequestBuilder.class
 com\example\Booking_Resort\controller\AuthenticationController.class
-com\example\Booking_Resort\dto\request\PaymentUpdateRequest$PaymentUpdateRequestBuilder.class
 com\example\Booking_Resort\dto\request\LogoutRequest.class
 com\example\Booking_Resort\mapper\FavoriteResortMapper.class
 com\example\Booking_Resort\service\RoleService.class
@@ -168,7 +167,6 @@ com\example\Booking_Resort\controller\ExpenseController.class
 com\example\Booking_Resort\dto\request\PermissionRequest.class
 com\example\Booking_Resort\dto\request\BookingRoomRequest.class
 com\example\Booking_Resort\dto\request\EvaluateUpdateRequest$EvaluateUpdateRequestBuilder.class
-com\example\Booking_Resort\dto\request\PaymentUpdateRequest.class
 com\example\Booking_Resort\dto\request\RoleRequest.class
 com\example\Booking_Resort\service\TypeRoomService.class
 com\example\Booking_Resort\dto\request\RoomUpdateRequest$RoomUpdateRequestBuilder.class

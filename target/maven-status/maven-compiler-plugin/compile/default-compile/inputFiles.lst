@@ -13,7 +13,6 @@ D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_R
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\request\ExpenseUpdateRequest.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\request\MonthlyReportCreationRequest.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\request\MonthlyReportUpdateRequest.java
-D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\request\PaymentUpdateRequest.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\response\UserRespone.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\controller\RegisterController.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\service\EmailService.java

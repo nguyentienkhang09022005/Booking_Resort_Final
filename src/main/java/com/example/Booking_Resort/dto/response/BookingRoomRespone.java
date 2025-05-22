@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingRoomRespone {
+    String idBr;
     LocalDateTime checkinday;
     LocalDateTime checkoutday;
     BigDecimal total_amount;

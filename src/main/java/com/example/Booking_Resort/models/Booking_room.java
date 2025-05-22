@@ -14,7 +14,7 @@ public class Booking_room
 {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id_br;
+    private String idBr;
 
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)

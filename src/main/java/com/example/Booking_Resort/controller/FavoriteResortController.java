@@ -1,15 +1,9 @@
 package com.example.Booking_Resort.controller;
 
 import com.example.Booking_Resort.dto.request.FavoriteResortRequest;
-import com.example.Booking_Resort.dto.request.PaymentCreationRequest;
-import com.example.Booking_Resort.dto.request.PaymentUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
 import com.example.Booking_Resort.dto.response.FavoriteResortRespone;
-import com.example.Booking_Resort.dto.response.PaymentRespone;
-import com.example.Booking_Resort.dto.response.ResortResponse;
-import com.example.Booking_Resort.models.Payment;
 import com.example.Booking_Resort.service.FavoriteResortService;
-import com.example.Booking_Resort.service.PaymentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

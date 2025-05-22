@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.Booking_Resort.BookingResortApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.23 s -- in com.example.Booking_Resort.BookingResortApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.55 s -- in com.example.Booking_Resort.BookingResortApplicationTests

@@ -13,6 +13,5 @@ import java.math.BigDecimal;
 public class PaymentCreationRequest
 {
     String id_br;
-    BigDecimal money;
     String payment_method;
 }

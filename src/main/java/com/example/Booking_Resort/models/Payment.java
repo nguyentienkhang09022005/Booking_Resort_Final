@@ -14,11 +14,11 @@ public class Payment
 {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id_payment;
+    private String idPayment;
 
     @ManyToOne
     @JoinColumn(name = "id_br", nullable = false)
-    private Booking_room id_br;
+    private Booking_room idBr;
 
     private BigDecimal money;
 
@@ -26,12 +26,5 @@ public class Payment
     @Column(name = "create_date", updatable = false, nullable = false)
     private LocalDateTime create_date;
 
-    private String status;
-    @PrePersist
-    public void prePersist() {
-        if (this.status == null) {
-            this.status = "Chờ Thanh Toán";
-        }
-    }
     private String payment_method;
 }

@@ -1,10 +1,8 @@
 package com.example.Booking_Resort.controller;
 
 import com.example.Booking_Resort.dto.request.PaymentCreationRequest;
-import com.example.Booking_Resort.dto.request.PaymentUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
 import com.example.Booking_Resort.dto.response.PaymentRespone;
-import com.example.Booking_Resort.models.Payment;
 import com.example.Booking_Resort.service.PaymentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +15,26 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)@RequestMapping("/api/payment")
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequestMapping("/api/payment")
 public class PaymentController
 {
     PaymentService paymentService;
 
     // Endpoint lấy danh sách thanh toán
-    @GetMapping
-    public ApiRespone<List<Payment>> getAllPayment()
+    @GetMapping("/list_payment/{idUser}")
+    public ApiRespone<List<PaymentRespone>> getAllPayment(@PathVariable String idUser)
     {
-        return ApiRespone.<List<Payment>>builder()
-                .data(paymentService.getAllPayment())
+        return ApiRespone.<List<PaymentRespone>>builder()
+                .data(paymentService.getAllPayment(idUser))
+                .build();
+    }
+
+    @GetMapping("/inf_payment/{idPayment}")
+    public ApiRespone<PaymentRespone> infPayment(@PathVariable String idPayment)
+    {
+        return ApiRespone.<PaymentRespone>builder()
+                .data(paymentService.infPayment(idPayment))
                 .build();
     }
 
@@ -38,17 +45,6 @@ public class PaymentController
         return ApiRespone.<PaymentRespone>builder()
                 .message("successful creation")
                 .data(paymentService.savePayment(request))
-                .build();
-    }
-
-    // Endpoint thay đổi thông tin phiếu thanh toán
-    @PutMapping("/change_payment/{idPayment}")
-    public ApiRespone<PaymentRespone> changePayment(@RequestBody PaymentUpdateRequest request,
-                                                    @PathVariable String idPayment)
-    {
-        return ApiRespone.<PaymentRespone>builder()
-                .message("successful update payment")
-                .data(paymentService.changePayment(request,idPayment))
                 .build();
     }
 
