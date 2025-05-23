@@ -22,7 +22,7 @@ public class Booking_room
 
     @ManyToOne
     @JoinColumn(name = "id_room", nullable = false)
-    private Room id_room;
+    private Room idRoom;
 
     private LocalDateTime checkinday;
     private LocalDateTime checkoutday;

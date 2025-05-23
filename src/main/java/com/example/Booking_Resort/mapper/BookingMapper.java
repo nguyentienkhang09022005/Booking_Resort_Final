@@ -12,7 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface BookingMapper {
 
     @Mapping(target = "idUser", ignore = true)
-    @Mapping(target = "id_room", ignore = true)
+    @Mapping(target = "idRoom", ignore = true)
     @Mapping(target = "create_date", ignore = true)
     Booking_room toBookingRoom(BookingRoomRequest request);
 

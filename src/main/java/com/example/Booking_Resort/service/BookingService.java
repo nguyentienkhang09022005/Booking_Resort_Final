@@ -32,6 +32,7 @@ public class BookingService
     BookingRoomRepository bookingRoomRepository;
     BookingServiceRepository bookingServiceRepository;
     ServiceRSRepository serviceRSRepository;
+    ResortRepository resortRepository;
     UserRepository userRepository;
     RoomRepository roomRepository;
     BookingMapper bookingMapper;
@@ -100,6 +101,39 @@ public class BookingService
     }
 
     // Hàm lấy danh sách đặt phòng của mỗi resort
+    public List<BookingRoomRespone> getListBookingRoomOfResort(String idResort)
+    {
+        resortRepository.findById(idResort).orElseThrow(
+                () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
+        );
+
+        List<Booking_room> listBookingRoom = bookingRoomRepository.findByIdRoom_IdRs_IdRs(idResort);
+
+        List<BookingRoomRespone> responses = listBookingRoom.stream().map(bookingRoom -> {
+            List<Booking_Service> services = bookingServiceRepository.findByIdUserIdUser(
+                    bookingRoom.getIdUser().getIdUser()
+            );
+
+            List<BookingServiceResponse> serviceResponses = services.stream().map(service ->
+                    BookingServiceResponse.builder()
+                            .nameService(service.getIdSV().getName_sv())
+                            .quantity(service.getQuantity())
+                            .total_amount(service.getTotal_amount())
+                            .build()
+            ).collect(Collectors.toList());
+
+            return BookingRoomRespone.builder()
+                    .idBr(bookingRoom.getIdBr())
+                    .checkinday(bookingRoom.getCheckinday())
+                    .checkoutday(bookingRoom.getCheckoutday())
+                    .total_amount(bookingRoom.getTotal_amount())
+                    .status(bookingRoom.getStatus())
+                    .services(serviceResponses)
+                    .build();
+        }).collect(Collectors.toList());
+
+        return responses;
+    }
 
     // Hàm lưu phòng được đặt xuống csdl
     public BookingRoomRespone saveBookingRoom(BookingRoomRequest request) {
@@ -113,7 +147,7 @@ public class BookingService
         LocalDateTime now = LocalDateTime.now().withNano(0);
 
         Booking_room bookingRoom = bookingMapper.toBookingRoom(request);
-        bookingRoom.setId_room(room);
+        bookingRoom.setIdRoom(room);
         bookingRoom.setIdUser(user);
         bookingRoom.setCreate_date(now);
 
@@ -213,7 +247,7 @@ public class BookingService
         // Lưu lại thông tin cũ
         BigDecimal oldAmount = bookingRoom.getTotal_amount();
         LocalDateTime bookingDate = bookingRoom.getCreate_date().withNano(0);
-        Resort resort = bookingRoom.getId_room().getIdRs();
+        Resort resort = bookingRoom.getIdRoom().getIdRs();
         int month = bookingDate.getMonthValue();
         int year = bookingDate.getYear();
 
@@ -221,7 +255,7 @@ public class BookingService
         bookingMapper.updateBookingRoom(bookingRoom, request);
 
         // Xử lý lại danh sách dịch vụ
-        BigDecimal roomPrice = bookingRoom.getId_room().getPrice();
+        BigDecimal roomPrice = bookingRoom.getIdRoom().getPrice();
         BigDecimal totalAmount = roomPrice;
 
         List<BookingServiceResponse> serviceResponses = new ArrayList<>();
@@ -307,7 +341,7 @@ public class BookingService
         );
         BigDecimal revenue = bookingRoom.getTotal_amount();
         LocalDateTime createDate = bookingRoom.getCreate_date().withNano(0);
-        Resort resort = bookingRoom.getId_room().getIdRs();
+        Resort resort = bookingRoom.getIdRoom().getIdRs();
 
         int month = createDate.getMonthValue();
         int year = createDate.getYear();

@@ -12,4 +12,6 @@ public interface BookingServiceRepository extends JpaRepository<Booking_Service,
     void deleteByIdUser(User user);
 
     List<Booking_Service> findByIdUser(User idUser);
+
+    List<Booking_Service> findByIdUserIdUser(String idUser);
 }

@@ -24,7 +24,7 @@ public class BookingRoomController
 
     // Endpoint lấy danh sách phòng được đặt
     @GetMapping("/list_bookingroom/{idUser}")
-    public ApiRespone<List<BookingRoomRespone>> getAllResort(@PathVariable String idUser)
+    public ApiRespone<List<BookingRoomRespone>> getAllBookingRoom(@PathVariable String idUser)
     {
         return ApiRespone.<List<BookingRoomRespone>>builder()
                 .data(bookingService.getListBookingRoom(idUser))
@@ -37,6 +37,15 @@ public class BookingRoomController
     {
         return ApiRespone.<BookingRoomRespone>builder()
                 .data(bookingService.getInfBookingRoom(idBookingRoom))
+                .build();
+    }
+
+    // Endpoint lấy danh sách đặt phòng của resort
+    @GetMapping("/list_bookingroom_resort/{idResort}")
+    public ApiRespone<List<BookingRoomRespone>> getAllBookingRoomOfResort(@PathVariable String idResort)
+    {
+        return ApiRespone.<List<BookingRoomRespone>>builder()
+                .data(bookingService.getListBookingRoomOfResort(idResort))
                 .build();
     }
 

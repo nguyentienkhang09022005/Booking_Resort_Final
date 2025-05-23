@@ -10,4 +10,6 @@ import java.util.List;
 public interface BookingRoomRepository extends JpaRepository<Booking_room, String>
 {
     List<Booking_room> findByIdUser_IdUser(String idUser);
+
+    List<Booking_room> findByIdRoom_IdRs_IdRs(String idResort);
 }
