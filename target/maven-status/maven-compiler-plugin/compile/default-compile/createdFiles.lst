@@ -46,6 +46,7 @@ com\example\Booking_Resort\dto\request\DetailReportCreationRequest$DetailReportC
 com\example\Booking_Resort\dto\response\BookingRoomRespone.class
 com\example\Booking_Resort\models\FavoriteResortKey.class
 com\example\Booking_Resort\service\FavoriteResortService.class
+com\example\Booking_Resort\dto\response\RoomForBookingRespone$RoomForBookingResponeBuilder.class
 com\example\Booking_Resort\controller\PaymentController.class
 com\example\Booking_Resort\dto\request\TypeRoomRequest.class
 com\example\Booking_Resort\controller\EvaluateController.class
@@ -86,6 +87,7 @@ com\example\Booking_Resort\repository\PaymentRepository.class
 com\example\Booking_Resort\BookingResortApplication.class
 com\example\Booking_Resort\service\RegisterService.class
 com\example\Booking_Resort\exception\ApiException.class
+com\example\Booking_Resort\dto\response\ResortForBookingResponse.class
 com\example\Booking_Resort\models\Permissions$PermissionsBuilder.class
 com\example\Booking_Resort\dto\request\UserUpdateRequest.class
 com\example\Booking_Resort\dto\response\ApiRespone.class
@@ -143,6 +145,7 @@ com\example\Booking_Resort\mapper\FavoriteResortMapperImpl.class
 com\example\Booking_Resort\dto\request\IntrospectRequest$IntrospectRequestBuilder.class
 com\example\Booking_Resort\service\EmailService.class
 com\example\Booking_Resort\models\Room.class
+com\example\Booking_Resort\dto\response\ResortForBookingResponse$ResortForBookingResponseBuilder.class
 com\example\Booking_Resort\dto\response\AuthenticationRespone$AuthenticationResponeBuilder.class
 com\example\Booking_Resort\dto\request\ExpenseUpdateRequest.class
 com\example\Booking_Resort\repository\UserRepository.class
@@ -214,4 +217,5 @@ com\example\Booking_Resort\dto\response\TypeRoomRespone.class
 com\example\Booking_Resort\dto\MainBody.class
 com\example\Booking_Resort\impl\UploadImageFile.class
 com\example\Booking_Resort\dto\request\ServiceRSCreationRequest.class
+com\example\Booking_Resort\dto\response\RoomForBookingRespone.class
 com\example\Booking_Resort\mapper\BookingMapper.class

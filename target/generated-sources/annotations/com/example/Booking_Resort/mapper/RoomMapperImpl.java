@@ -2,6 +2,7 @@ package com.example.Booking_Resort.mapper;
 
 import com.example.Booking_Resort.dto.request.RoomCreationRequest;
 import com.example.Booking_Resort.dto.request.RoomUpdateRequest;
+import com.example.Booking_Resort.dto.response.RoomForBookingRespone;
 import com.example.Booking_Resort.dto.response.RoomRespone;
 import com.example.Booking_Resort.models.Room;
 import javax.annotation.processing.Generated;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-23T18:38:59+0700",
+    date = "2025-05-24T19:03:31+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
@@ -57,5 +58,19 @@ public class RoomMapperImpl implements RoomMapper {
         room.setPrice( request.getPrice() );
         room.setStatus( request.getStatus() );
         room.setDescribe_room( request.getDescribe_room() );
+    }
+
+    @Override
+    public RoomForBookingRespone toRoomForBookingResponse(Room room) {
+        if ( room == null ) {
+            return null;
+        }
+
+        RoomForBookingRespone.RoomForBookingResponeBuilder roomForBookingRespone = RoomForBookingRespone.builder();
+
+        roomForBookingRespone.name_room( room.getName_room() );
+        roomForBookingRespone.price( room.getPrice() );
+
+        return roomForBookingRespone.build();
     }
 }

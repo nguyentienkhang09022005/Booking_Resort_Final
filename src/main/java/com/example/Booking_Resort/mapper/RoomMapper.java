@@ -2,6 +2,7 @@ package com.example.Booking_Resort.mapper;
 
 import com.example.Booking_Resort.dto.request.RoomCreationRequest;
 import com.example.Booking_Resort.dto.request.RoomUpdateRequest;
+import com.example.Booking_Resort.dto.response.RoomForBookingRespone;
 import com.example.Booking_Resort.dto.response.RoomRespone;
 import com.example.Booking_Resort.models.Room;
 import org.mapstruct.Mapper;
@@ -20,4 +21,8 @@ public interface RoomMapper
 
     @Mapping(target = "id_type", ignore = true)
     void updateRoom(@MappingTarget Room room, RoomUpdateRequest request);
+
+    @Mapping(target = "image", ignore = true)
+    RoomForBookingRespone toRoomForBookingResponse(Room room);
+
 }

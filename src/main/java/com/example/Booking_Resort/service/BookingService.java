@@ -5,9 +5,13 @@ import com.example.Booking_Resort.dto.request.BookingRoomUpdateRequest;
 import com.example.Booking_Resort.dto.request.BookingServiceRequest;
 import com.example.Booking_Resort.dto.response.BookingRoomRespone;
 import com.example.Booking_Resort.dto.response.BookingServiceResponse;
+import com.example.Booking_Resort.dto.response.ResortForBookingResponse;
+import com.example.Booking_Resort.dto.response.RoomForBookingRespone;
 import com.example.Booking_Resort.exception.ApiException;
 import com.example.Booking_Resort.exception.ErrorCode;
 import com.example.Booking_Resort.mapper.BookingMapper;
+import com.example.Booking_Resort.mapper.ResortMapper;
+import com.example.Booking_Resort.mapper.RoomMapper;
 import com.example.Booking_Resort.models.*;
 import com.example.Booking_Resort.repository.*;
 import jakarta.transaction.Transactional;
@@ -37,13 +41,15 @@ public class BookingService
     RoomRepository roomRepository;
     BookingMapper bookingMapper;
     MonthlyReportRepository monthlyReportRepository;
+    ResortMapper resortMapper;
+    RoomMapper roomMapper;
 
     // Hàm lấy thông tin booking
     public List<BookingRoomRespone> getListBookingRoom(String idUser)
     {
         List<Booking_room> bookingRooms = bookingRoomRepository.findByIdUser_IdUser(idUser);
         if (bookingRooms.isEmpty()) {
-            throw new ApiException(ErrorCode.USER_NOT_FOUND);
+            throw new ApiException(ErrorCode.BOOKING_ROOM_NOT_FOUND);
         }
 
         return bookingRooms
@@ -61,12 +67,26 @@ public class BookingService
                                     .build())
                             .collect(Collectors.toList());
 
+                    Resort resort = bookingRoom.getIdRoom().getIdRs();
+                    Room room = bookingRoom.getIdRoom();
+
                     return BookingRoomRespone.builder()
                             .idBr(bookingRoom.getIdBr())
                             .checkinday(bookingRoom.getCheckinday())
                             .checkoutday(bookingRoom.getCheckoutday())
                             .total_amount(bookingRoom.getTotal_amount())
                             .status(bookingRoom.getStatus())
+                            .resortResponse(ResortForBookingResponse.builder()
+                                    .name_rs(resort.getName_rs())
+                                    .location_rs(resort.getLocation_rs())
+                                    .image(resort.getImages().get(0).getUrl())
+                                    .build())
+                            .roomResponse(RoomForBookingRespone.builder()
+                                    .name_room(room.getName_room())
+                                    .type_room(room.getId_type().getNameType())
+                                    .price(room.getPrice())
+                                    .image(room.getImages().get(0).getUrl())
+                                    .build())
                             .services(serviceDtos)
                             .build();
                 })
@@ -90,12 +110,26 @@ public class BookingService
                         .build())
                 .collect(Collectors.toList());
 
+        Resort resort = bookingRoom.getIdRoom().getIdRs();
+        Room room = bookingRoom.getIdRoom();
+
         return BookingRoomRespone.builder()
                 .idBr(bookingRoom.getIdBr())
                 .checkinday(bookingRoom.getCheckinday())
                 .checkoutday(bookingRoom.getCheckoutday())
                 .total_amount(bookingRoom.getTotal_amount())
                 .status(bookingRoom.getStatus())
+                .resortResponse(ResortForBookingResponse.builder()
+                        .name_rs(resort.getName_rs())
+                        .location_rs(resort.getLocation_rs())
+                        .image(resort.getImages().get(0).getUrl())
+                        .build())
+                .roomResponse(RoomForBookingRespone.builder()
+                        .name_room(room.getName_room())
+                        .type_room(room.getId_type().getNameType())
+                        .price(room.getPrice())
+                        .image(room.getImages().get(0).getUrl())
+                        .build())
                 .services(listService)
                 .build();
     }
@@ -109,7 +143,7 @@ public class BookingService
 
         List<Booking_room> listBookingRoom = bookingRoomRepository.findByIdRoom_IdRs_IdRs(idResort);
 
-        List<BookingRoomRespone> responses = listBookingRoom.stream().map(bookingRoom -> {
+        List<BookingRoomRespone> response = listBookingRoom.stream().map(bookingRoom -> {
             List<Booking_Service> services = bookingServiceRepository.findByIdUserIdUser(
                     bookingRoom.getIdUser().getIdUser()
             );
@@ -122,17 +156,31 @@ public class BookingService
                             .build()
             ).collect(Collectors.toList());
 
+            Resort resort = bookingRoom.getIdRoom().getIdRs();
+            Room room = bookingRoom.getIdRoom();
+
             return BookingRoomRespone.builder()
                     .idBr(bookingRoom.getIdBr())
                     .checkinday(bookingRoom.getCheckinday())
                     .checkoutday(bookingRoom.getCheckoutday())
                     .total_amount(bookingRoom.getTotal_amount())
                     .status(bookingRoom.getStatus())
+                    .resortResponse(ResortForBookingResponse.builder()
+                            .name_rs(resort.getName_rs())
+                            .location_rs(resort.getLocation_rs())
+                            .image(resort.getImages().get(0).getUrl())
+                            .build())
+                    .roomResponse(RoomForBookingRespone.builder()
+                            .name_room(room.getName_room())
+                            .type_room(room.getId_type().getNameType())
+                            .price(room.getPrice())
+                            .image(room.getImages().get(0).getUrl())
+                            .build())
                     .services(serviceResponses)
                     .build();
         }).collect(Collectors.toList());
 
-        return responses;
+        return response;
     }
 
     // Hàm lưu phòng được đặt xuống csdl
@@ -234,6 +282,16 @@ public class BookingService
         var bookingResponse = bookingMapper.toBookingRespone(bookingRoom);
         bookingResponse.setIdBr(bookingRoom.getIdBr());
         bookingResponse.setServices(serviceResponses);
+
+        ResortForBookingResponse resortInfo = resortMapper.toResortForBookingResponse(room.getIdRs());
+        resortInfo.setImage(room.getIdRs().getImages().get(0).getUrl());
+        RoomForBookingRespone roomInfo = roomMapper.toRoomForBookingResponse(room);
+        roomInfo.setType_room(room.getId_type().getNameType());
+        roomInfo.setImage(room.getImages().get(0).getUrl());
+
+        bookingResponse.setResortResponse(resortInfo);
+        bookingResponse.setRoomResponse(roomInfo);
+
         return bookingResponse;
     }
 
@@ -329,6 +387,15 @@ public class BookingService
         var bookingRespone = bookingMapper.toBookingRespone(updatedBooking);
         bookingRespone.setIdBr(updatedBooking.getIdBr());
         bookingRespone.setServices(serviceResponses);
+
+        ResortForBookingResponse resortInfo = resortMapper.toResortForBookingResponse(updatedBooking.getIdRoom().getIdRs());
+        resortInfo.setImage(updatedBooking.getIdRoom().getIdRs().getImages().get(0).getUrl());
+        RoomForBookingRespone roomInfo = roomMapper.toRoomForBookingResponse(updatedBooking.getIdRoom());
+        roomInfo.setImage(updatedBooking.getIdRoom().getIdRs().getImages().get(0).getUrl());
+        roomInfo.setType_room(updatedBooking.getIdRoom().getId_type().getNameType());
+
+        bookingRespone.setResortResponse(resortInfo);
+        bookingRespone.setRoomResponse(roomInfo);
         return bookingRespone;
     }
 

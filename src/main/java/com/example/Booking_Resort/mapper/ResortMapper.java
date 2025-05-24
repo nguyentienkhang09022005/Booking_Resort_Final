@@ -2,6 +2,7 @@ package com.example.Booking_Resort.mapper;
 
 import com.example.Booking_Resort.dto.request.ResortCreationRequest;
 import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
+import com.example.Booking_Resort.dto.response.ResortForBookingResponse;
 import com.example.Booking_Resort.dto.response.ResortResponse;
 import com.example.Booking_Resort.models.Resort;
 import org.mapstruct.Mapper;
@@ -18,4 +19,8 @@ public interface ResortMapper {
     ResortResponse toResortRespone(Resort resort);
 
     void updateResort(@MappingTarget Resort resort, ResortUpdateRequest request);
+
+    @Mapping(target = "image", ignore = true)
+    ResortForBookingResponse toResortForBookingResponse(Resort resort);
+
 }

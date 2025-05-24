@@ -1,5 +1,7 @@
 package com.example.Booking_Resort.dto.response;
 
+import com.example.Booking_Resort.models.Resort;
+import com.example.Booking_Resort.models.Room;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,6 +20,8 @@ public class BookingRoomRespone {
     LocalDateTime checkoutday;
     BigDecimal total_amount;
     String status;
+    ResortForBookingResponse resortResponse;
+    RoomForBookingRespone roomResponse;
     List<BookingServiceResponse> services;
 }
 
