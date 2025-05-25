@@ -15,6 +15,7 @@ public class BookingRoomUpdateRequest
 {
     LocalDateTime checkinday;
     LocalDateTime checkoutday;
+    String status;
 
     List<BookingServiceRequest> services;
 }

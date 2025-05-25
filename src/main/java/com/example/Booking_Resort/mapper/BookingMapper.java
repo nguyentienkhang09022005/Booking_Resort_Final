@@ -18,6 +18,7 @@ public interface BookingMapper {
 
     BookingRoomRespone toBookingRespone(Booking_room bookingRoom);
 
+    @Mapping(target = "status", source = "status")
     void updateBookingRoom(@MappingTarget Booking_room bookingRoom, BookingRoomUpdateRequest request);
 
 }

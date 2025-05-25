@@ -1,7 +1,5 @@
 package com.example.Booking_Resort.dto.response;
 
-import com.example.Booking_Resort.models.Resort;
-import com.example.Booking_Resort.models.Room;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,6 +14,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingRoomRespone {
     String idBr;
+    String idResort;
     LocalDateTime checkinday;
     LocalDateTime checkoutday;
     BigDecimal total_amount;

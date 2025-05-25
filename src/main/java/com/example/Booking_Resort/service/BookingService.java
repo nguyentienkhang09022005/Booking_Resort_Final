@@ -115,6 +115,7 @@ public class BookingService
 
         return BookingRoomRespone.builder()
                 .idBr(bookingRoom.getIdBr())
+                .idResort(resort.getIdRs())
                 .checkinday(bookingRoom.getCheckinday())
                 .checkoutday(bookingRoom.getCheckoutday())
                 .total_amount(bookingRoom.getTotal_amount())
