@@ -123,6 +123,7 @@ D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_R
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\config\CloudinaryConfig.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\service\UserService.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\service\PermissionService.java
+D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\config\CustomOAuth2User.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\exception\ApiException.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\response\RoomForBookingRespone.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\models\ServiceRS.java

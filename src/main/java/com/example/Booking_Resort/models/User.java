@@ -40,7 +40,7 @@ public class User {
     @Column(name = "password_user")
     private String passworduser;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     Set<Roles> role_user;
 
     @OneToMany(mappedBy = "idUser", cascade = CascadeType.ALL, orphanRemoval = true)

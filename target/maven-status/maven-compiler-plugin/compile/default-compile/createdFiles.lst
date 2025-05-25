@@ -122,6 +122,7 @@ com\example\Booking_Resort\exception\GlobalExceptionHandler.class
 com\example\Booking_Resort\repository\BookingRoomRepository.class
 com\example\Booking_Resort\dto\request\AuthenticationRequest$AuthenticationRequestBuilder.class
 com\example\Booking_Resort\dto\request\MonthlyReportGetInfomationRequest$MonthlyReportGetInfomationRequestBuilder.class
+com\example\Booking_Resort\config\CustomOAuth2User.class
 com\example\Booking_Resort\dto\request\RegisterRequest.class
 com\example\Booking_Resort\dto\response\PermissionRespone$PermissionResponeBuilder.class
 com\example\Booking_Resort\config\CloudinaryConfig.class

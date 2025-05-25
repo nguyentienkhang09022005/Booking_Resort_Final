@@ -1,7 +1,10 @@
 package com.example.Booking_Resort.service;
 
+import com.example.Booking_Resort.config.CustomOAuth2User;
+import com.example.Booking_Resort.dto.response.AuthenticationRespone;
 import com.example.Booking_Resort.models.User;
 import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -14,15 +17,12 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     UserService userService;
-
-    public CustomOAuth2UserService(UserService userService) {
-        this.userService = userService;
-    }
-
+    AuthenticationService authenticationService;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -40,7 +40,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (user.getIdUser() == null) {
             throw new RuntimeException("Lưu user thất bại");
         }
-        return oAuth2User;
+
+        // Tạo JWT token
+        String token = authenticationService.generateToken(user);
+        String refreshToken = authenticationService.generateRefreshToken(user);
+
+        AuthenticationRespone authResponse = AuthenticationRespone.builder()
+                .idUser(user.getIdUser())
+                .token(token)
+                .refreshToken(refreshToken)
+                .authenticated(true)
+                .build();
+
+        return new CustomOAuth2User(oAuth2User, authResponse);
     }
 
 }

@@ -95,7 +95,7 @@ public class AuthenticationService
 
 
     // Hàm tạo ACCESS TOKEN
-    private String generateToken(User user)
+    public String generateToken(User user)
     {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 
@@ -122,7 +122,7 @@ public class AuthenticationService
     }
 
     // Hàm tạo REFRESH TOKEN
-    private String generateRefreshToken(User user)
+    public String generateRefreshToken(User user)
     {
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
 

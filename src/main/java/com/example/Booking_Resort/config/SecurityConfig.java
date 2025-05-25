@@ -1,7 +1,10 @@
 package com.example.Booking_Resort.config;
 
+import com.example.Booking_Resort.dto.response.AuthenticationRespone;
+import com.example.Booking_Resort.service.AuthenticationService;
 import com.example.Booking_Resort.service.CustomOAuth2UserService;
 import com.example.Booking_Resort.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -23,6 +26,7 @@ public class SecurityConfig
 {
     private final CustomJwtDecoder customJwtDecoder;
     private final UserService userService;
+    private final AuthenticationService authenticationService;
     private static final String[] PUBLIC_ENDPOINTS = {
             "/api/auth/login",
             "/api/user/register",
@@ -35,9 +39,12 @@ public class SecurityConfig
             "/forgotPassword/**",
     };
 
-    public SecurityConfig(CustomJwtDecoder customJwtDecoder, @Lazy UserService userService) {
+    public SecurityConfig(CustomJwtDecoder customJwtDecoder,
+                          @Lazy UserService userService,
+                          @Lazy AuthenticationService authenticationService) {
         this.customJwtDecoder = customJwtDecoder;
         this.userService = userService;
+        this.authenticationService = authenticationService;
     }
 
     @Bean
@@ -59,7 +66,11 @@ public class SecurityConfig
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService()))
                         .successHandler((request, response, authentication) -> {
-                            response.sendRedirect("/api/user/infUserGoogle");
+                            CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+                            AuthenticationRespone authResponse = oauthUser.getAuthResponse();
+                            response.setContentType("application/json");
+                            response.setCharacterEncoding("UTF-8");
+                            new ObjectMapper().writeValue(response.getWriter(), authResponse);
                         })
                 )
                 .csrf(AbstractHttpConfigurer::disable);
@@ -83,6 +94,6 @@ public class SecurityConfig
     }
     @Bean
     public CustomOAuth2UserService customOAuth2UserService() {
-        return new CustomOAuth2UserService(userService);
+        return new CustomOAuth2UserService(userService, authenticationService);
     }
 }

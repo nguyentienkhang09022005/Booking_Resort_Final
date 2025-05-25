@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.example.Booking_Resort.config.CustomOAuth2User;
 import com.example.Booking_Resort.dto.request.UserCreationRequest;
 import com.example.Booking_Resort.dto.request.UserUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
+import com.example.Booking_Resort.dto.response.AuthenticationRespone;
 import com.example.Booking_Resort.dto.response.UserRespone;
 import com.example.Booking_Resort.service.UserService;
 import com.example.Booking_Resort.models.User;
@@ -15,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -95,18 +98,20 @@ public class UserController {
                 .build();
     }
 
-    // Endpoint đăng nhập bằng Google
     @GetMapping("/infUserGoogle")
-    public ResponseEntity<Map<String, Object>> user(Principal principal)
-    {
+    public ResponseEntity<?> getUserInfo(Principal principal) {
         if (principal instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
-            Map<String, Object> attributes = oauthToken.getPrincipal().getAttributes();
 
-            // Trả về thông tin người dùng từ Google
-            return ResponseEntity.ok(attributes);
+            if (oauthToken.getPrincipal() instanceof CustomOAuth2User) {
+                CustomOAuth2User customOAuth2User = (CustomOAuth2User) oauthToken.getPrincipal();
+                AuthenticationRespone authResp = customOAuth2User.getAuthResponse();
+
+                return ResponseEntity.ok(authResp);
+            }
         }
-        // Nếu không phải OAuth2, trả về thông tin cơ bản
-        return ResponseEntity.ok(Collections.singletonMap("name", principal.getName()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Collections.singletonMap("error", "Not authenticated with OAuth2"));
     }
+
 }
