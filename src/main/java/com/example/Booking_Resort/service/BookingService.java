@@ -44,7 +44,7 @@ public class BookingService
     ResortMapper resortMapper;
     RoomMapper roomMapper;
 
-    // Hàm lấy thông tin booking
+    // Hàm lấy danh sách booking
     public List<BookingRoomRespone> getListBookingRoom(String idUser)
     {
         List<Booking_room> bookingRooms = bookingRoomRepository.findByIdUser_IdUser(idUser);
@@ -61,6 +61,7 @@ public class BookingService
 
                     List<BookingServiceResponse> serviceDtos = services.stream()
                             .map(service -> BookingServiceResponse.builder()
+                                    .idSV(service.getIdSV().getId_sv())
                                     .nameService(service.getIdSV().getName_sv())
                                     .quantity(service.getQuantity())
                                     .total_amount(service.getTotal_amount())
@@ -104,6 +105,7 @@ public class BookingService
 
         List<BookingServiceResponse> listService = services.stream()
                 .map(service -> BookingServiceResponse.builder()
+                        .idSV(service.getIdSV().getId_sv())
                         .nameService(service.getIdSV().getName_sv())
                         .quantity(service.getQuantity())
                         .total_amount(service.getTotal_amount())
@@ -151,6 +153,7 @@ public class BookingService
 
             List<BookingServiceResponse> serviceResponses = services.stream().map(service ->
                     BookingServiceResponse.builder()
+                            .idSV(service.getIdSV().getId_sv())
                             .nameService(service.getIdSV().getName_sv())
                             .quantity(service.getQuantity())
                             .total_amount(service.getTotal_amount())
@@ -239,6 +242,7 @@ public class BookingService
             // Map sang response DTO
             serviceResponses = bookingServices.stream()
                     .map(bs -> BookingServiceResponse.builder()
+                            .idSV(bs.getIdSV().getId_sv())
                             .nameService(bs.getIdSV().getName_sv())
                             .quantity(bs.getQuantity())
                             .total_amount(bs.getTotal_amount())
@@ -344,6 +348,7 @@ public class BookingService
 
             serviceResponses = newServices.stream()
                     .map(bs -> BookingServiceResponse.builder()
+                            .idSV(bs.getIdSV().getId_sv())
                             .nameService(bs.getIdSV().getName_sv())
                             .quantity(bs.getQuantity())
                             .total_amount(bs.getTotal_amount())
