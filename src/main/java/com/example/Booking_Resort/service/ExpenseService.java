@@ -43,7 +43,11 @@ public class ExpenseService {
             throw new ApiException(ErrorCode.RESORT_NOT_FOUND);
         }
         return expenses.stream()
-                .map(expenseMapper::toExpenseResponse)
+                .map(expense -> {
+                    ExpenseResponse response = expenseMapper.toExpenseResponse(expense);
+                    response.setIdExpense(expense.getIdExpense()); // Set thủ công ở đây
+                    return response;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +57,9 @@ public class ExpenseService {
         Expense expense = expenseRepository.findById(idExpense).orElseThrow(
                 () -> new ApiException(ErrorCode.EXPENSE_NOT_FOUND)
         );
-        return expenseMapper.toExpenseResponse(expense);
+        var expenseResponse = expenseMapper.toExpenseResponse(expense);
+        expenseResponse.setIdExpense(expense.getIdExpense());
+        return expenseResponse;
     }
 
     // Hàm lưu chi tiêu xuống csdl
@@ -102,7 +108,9 @@ public class ExpenseService {
         report.setNetProfit(report.getTotalRevenue().subtract(report.getTotalExpense()));
         monthlyReportRepository.save(report);
 
-        return expenseMapper.toExpenseResponse(expense);
+        var expenseResponse = expenseMapper.toExpenseResponse(expense);
+        expenseResponse.setIdExpense(expense.getIdExpense());
+        return expenseResponse;
     }
 
     // Hàm xóa chi tiêu
@@ -177,6 +185,8 @@ public class ExpenseService {
 
         // Lưu cả detailReport và report
         monthlyReportRepository.save(report);
-        return expenseMapper.toExpenseResponse(updatedExpense);
+        var expenseResponse = expenseMapper.toExpenseResponse(expense);
+        expenseResponse.setIdExpense(expense.getIdExpense());
+        return expenseResponse;
     }
 }

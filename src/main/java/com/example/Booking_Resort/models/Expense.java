@@ -14,7 +14,7 @@ public class Expense
 {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id_expense;
+    private String idExpense;
 
     @ManyToOne
     @JoinColumn(name = "id_rs", nullable = false)

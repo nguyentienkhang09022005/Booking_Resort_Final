@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-28T01:50:58+0700",
+    date = "2025-05-28T02:16:26+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
@@ -37,6 +37,7 @@ public class ExpenseMapperImpl implements ExpenseMapper {
 
         ExpenseResponse.ExpenseResponseBuilder expenseResponse = ExpenseResponse.builder();
 
+        expenseResponse.idExpense( expense.getIdExpense() );
         expenseResponse.category( expense.getCategory() );
         expenseResponse.amount( expense.getAmount() );
         expenseResponse.create_date( expense.getCreate_date() );

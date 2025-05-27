@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExpenseResponse {
+    private String idExpense;
     private String category;
     private BigDecimal amount;
     private LocalDateTime create_date;
