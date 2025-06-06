@@ -1,7 +1,9 @@
 package com.example.Booking_Resort.service;
 
+import com.example.Booking_Resort.dto.request.MonthlyReportForChartRequest;
 import com.example.Booking_Resort.dto.request.MonthlyReportGetInfomationRequest;
 import com.example.Booking_Resort.dto.response.DetailReportResponse;
+import com.example.Booking_Resort.dto.response.MonthlyReportForChartResponse;
 import com.example.Booking_Resort.dto.response.MonthlyReportResponse;
 import com.example.Booking_Resort.exception.ApiException;
 import com.example.Booking_Resort.exception.ErrorCode;
@@ -13,6 +15,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,7 +29,10 @@ public class MonthlyReportService {
 
     // Hàm chi tiết thông tin báo cáo của tháng/năm
     public MonthlyReportResponse infMonthReport(MonthlyReportGetInfomationRequest request) {
-
+        // Kiểm tra resort tồn tại
+        if (!monthlyReportRepository.existsByIdResort_IdRs(request.getIdResort())) {
+            throw new ApiException(ErrorCode.RESORT_NOT_FOUND);
+        }
         Monthly_Report report = monthlyReportRepository
                 .findByIdResort_IdRsAndReportYearAndReportMonth(
                         request.getIdResort(),
@@ -51,5 +59,39 @@ public class MonthlyReportService {
                                         .build())
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    // Hàm lấy dữ liệu của báo cáo theo năm
+    public List<MonthlyReportForChartResponse> getMonthlyReportsForYear(MonthlyReportForChartRequest request) {
+        // Kiểm tra resort tồn tại
+        if (!monthlyReportRepository.existsByIdResort_IdRs(request.getIdResort())) {
+            throw new ApiException(ErrorCode.RESORT_NOT_FOUND);
+        }
+
+        // Lấy danh sách báo cáo của năm theo resort
+        List<Monthly_Report> reports = monthlyReportRepository
+                .findByIdResort_IdRsAndReportYear(request.getIdResort(), request.getReportYear());
+
+        // Map báo cáo theo tháng để dễ tra cứu
+        Map<Integer, Monthly_Report> reportMap = reports.stream()
+                .collect(Collectors.toMap(Monthly_Report::getReportMonth, report -> report));
+
+        List<MonthlyReportForChartResponse> responses = new java.util.ArrayList<>();
+
+        for (int month = 1; month <= 12; month++) {
+            Monthly_Report report = reportMap.get(month);
+
+            MonthlyReportForChartResponse response = MonthlyReportForChartResponse.builder()
+                    .idReport(report != null ? report.getIdReport() : null)
+                    .reportMonth(month)
+                    .reportYear(request.getReportYear())
+                    .totalRevenue(report != null ? report.getTotalRevenue() : BigDecimal.ZERO)
+                    .totalExpense(report != null ? report.getTotalExpense() : BigDecimal.ZERO)
+                    .netProfit(report != null ? report.getNetProfit() : BigDecimal.ZERO)
+                    .build();
+
+            responses.add(response);
+        }
+        return responses;
     }
 }
