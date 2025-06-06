@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.example.Booking_Resort.dto.request.ResortCreationRequest;
 import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
 import com.example.Booking_Resort.dto.response.EvaluateRespone;
+import com.example.Booking_Resort.dto.response.InfResortResponse;
 import com.example.Booking_Resort.dto.response.ResortResponse;
 import com.example.Booking_Resort.dto.response.RoomRespone;
 import com.example.Booking_Resort.exception.ApiException;
@@ -170,7 +171,7 @@ public class ResortService {
     }
 
     // Hàm lấy thông tin resort
-    public ResortResponse getInfResort(String idResort, String idUser)
+    public InfResortResponse getInfResort(String idResort, String idUser)
     {
         Resort resort = resortRepository.findById(idResort).orElseThrow(
                 () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
@@ -189,10 +190,17 @@ public class ResortService {
         // Lấy danh sách đánh giá thuộc resort
         List<Evaluate> evaluates = evaluateRepository.findByIdRs_IdRs(resort.getIdRs());
 
-        List<EvaluateRespone> evaluationResponses = evaluates.stream().map(evaluate -> {
+        List<InfResortResponse.EvaluateInfResortResponse> evaluationResponses = evaluates.stream().map(evaluate -> {
             User user = evaluate.getIdUser();
-            return EvaluateRespone.builder()
+            // Lấy avatar của user
+            Image avatarImage = imageRepository.findFirstByIdUser_IdUser(user.getIdUser());
+            String avatarUrl = avatarImage != null ? avatarImage.getUrl() : null;
+
+            return InfResortResponse.EvaluateInfResortResponse.builder()
                     .idEvaluate(evaluate.getId_evaluate())
+                    .idUser(user.getIdUser())
+                    .nameuser(user.getNameuser())
+                    .avatar(avatarUrl)
                     .user_comment(evaluate.getUser_comment())
                     .star_rating(evaluate.getStar_rating())
                     .create_date(evaluate.getCreate_date())
@@ -214,12 +222,16 @@ public class ResortService {
                     .build();
         }).collect(Collectors.toList());
 
-        var resortResponse = resortMapper.toResortRespone(resort);
+        // Lấy ảnh đại diện của resort
+        Image resortImage = imageRepository.findFirstByIdRs_IdRs(resort.getIdRs());
+        String resortImageUrl = resortImage != null ? resortImage.getUrl() : null;
+
+        var resortResponse = resortMapper.toResortInfRespone(resort);
         boolean isFavorite = favoriteResortRepository.existsByIdUser_IdUserAndIdResort_IdRs(idUser, idResort);
         resortResponse.setFavorite(isFavorite);
         resortResponse.setRooms(roomResponses);
         resortResponse.setEvaluates(evaluationResponses);
-        resortResponse.setImage(resort.getImages().get(0).getUrl());
+        resortResponse.setImage(resortImageUrl);
         resortResponse.setStar(star);
         return resortResponse;
     }

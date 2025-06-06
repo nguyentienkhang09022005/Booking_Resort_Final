@@ -5,6 +5,7 @@ import java.util.List;
 import com.example.Booking_Resort.dto.request.ResortCreationRequest;
 import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
+import com.example.Booking_Resort.dto.response.InfResortResponse;
 import com.example.Booking_Resort.dto.response.ResortResponse;
 import com.example.Booking_Resort.service.ResortService;
 import lombok.AccessLevel;
@@ -46,9 +47,9 @@ public class ResortController {
 
     // Endpont lấy thông tin resort
     @GetMapping("/{idResort}/{idUser}")
-    public ApiRespone<ResortResponse> getInfResort(@PathVariable String idResort, @PathVariable String idUser)
+    public ApiRespone<InfResortResponse> getInfResort(@PathVariable String idResort, @PathVariable String idUser)
     {
-        return ApiRespone.<ResortResponse>builder()
+        return ApiRespone.<InfResortResponse>builder()
                 .message("successful get information of resort")
                 .data(resortService.getInfResort(idResort, idUser))
                 .build();

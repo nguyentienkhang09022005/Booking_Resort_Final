@@ -31,6 +31,7 @@ public enum ErrorCode
 
     // Lỗi Evaluate
     EVALUATE_NOT_FOUND("EVALUATE_001", "Evaluate not found", HttpStatus.NOT_FOUND),
+    EVALUATE_ALREADY_EXISTS("EVALUATE_002", "Evaluate already exists", HttpStatus.CONFLICT),
 
     // Lỗi Booking_room
     BOOKING_ROOM_NOT_FOUND("BOOKING_ROOM_001", "Booking room not found", HttpStatus.NOT_FOUND),

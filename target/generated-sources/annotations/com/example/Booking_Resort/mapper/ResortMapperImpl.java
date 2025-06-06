@@ -2,6 +2,7 @@ package com.example.Booking_Resort.mapper;
 
 import com.example.Booking_Resort.dto.request.ResortCreationRequest;
 import com.example.Booking_Resort.dto.request.ResortUpdateRequest;
+import com.example.Booking_Resort.dto.response.InfResortResponse;
 import com.example.Booking_Resort.dto.response.ResortForBookingResponse;
 import com.example.Booking_Resort.dto.response.ResortResponse;
 import com.example.Booking_Resort.models.Resort;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-28T02:16:26+0700",
+    date = "2025-06-07T02:12:11+0700",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.14 (Oracle Corporation)"
 )
 @Component
@@ -45,6 +46,22 @@ public class ResortMapperImpl implements ResortMapper {
         resortResponse.describe_rs( resort.getDescribe_rs() );
 
         return resortResponse.build();
+    }
+
+    @Override
+    public InfResortResponse toResortInfRespone(Resort resort) {
+        if ( resort == null ) {
+            return null;
+        }
+
+        InfResortResponse.InfResortResponseBuilder infResortResponse = InfResortResponse.builder();
+
+        infResortResponse.idRs( resort.getIdRs() );
+        infResortResponse.name_rs( resort.getName_rs() );
+        infResortResponse.location_rs( resort.getLocation_rs() );
+        infResortResponse.describe_rs( resort.getDescribe_rs() );
+
+        return infResortResponse.build();
     }
 
     @Override

@@ -47,6 +47,15 @@ public class EvaluateService
         Resort resort =  resortRepository.findById(request.getId_rs()).orElseThrow(
                 () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
         );
+
+        // Kiểm tra nếu đã đánh giá rồi thì không cho đánh giá nữa
+        boolean isEvaluated = evaluateRepository.existsByIdUser_IdUserAndIdRs_IdRs(
+                request.getId_user(), request.getId_rs());
+
+        if (isEvaluated) {
+            throw new ApiException(ErrorCode.EVALUATE_ALREADY_EXISTS);
+        }
+
         Evaluate evaluate = evaluateMapper.toEvaluate(request);
         evaluate.setIdUser(user);
         evaluate.setIdRs(resort);

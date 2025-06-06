@@ -14,4 +14,6 @@ public interface EvaluateRepository extends JpaRepository<Evaluate, String> {
     Double getAverageStartRatingByResort(@Param("idRs") String idRs);
 
     List<Evaluate> findByIdRs_IdRs(String idRs);
+
+    boolean existsByIdUser_IdUserAndIdRs_IdRs(String idUser, String idRs);
 }
