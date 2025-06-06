@@ -179,6 +179,10 @@ public class ResortService {
                 () -> new ApiException(ErrorCode.USER_NOT_FOUND)
         );
 
+        // Tính trung bình sao
+        Double avgRating = evaluateRepository.getAverageStartRatingByResort(resort.getIdRs());
+        double star = avgRating != null ? Math.round(avgRating * 10.0) / 10.0 : 0.0;
+
         // Lấy danh sách phòng thuộc resort
         List<Room> rooms = roomRepository.findByIdRs_IdRs(resort.getIdRs());
 
@@ -216,6 +220,7 @@ public class ResortService {
         resortResponse.setRooms(roomResponses);
         resortResponse.setEvaluates(evaluationResponses);
         resortResponse.setImage(resort.getImages().get(0).getUrl());
+        resortResponse.setStar(star);
         return resortResponse;
     }
 
