@@ -109,6 +109,7 @@ public class ExpenseService {
         monthlyReportRepository.save(report);
 
         var expenseResponse = expenseMapper.toExpenseResponse(expense);
+        expenseResponse.setCreate_date(expense.getCreateDate());
         expenseResponse.setIdExpense(expense.getIdExpense());
         return expenseResponse;
     }
