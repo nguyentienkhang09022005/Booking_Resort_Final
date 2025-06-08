@@ -16,6 +16,8 @@ public class DetailReportResponse {
     private String type;
     private String titleOfExpense;
     private String titleOfIncome;
+    private String idExpense;
+    private String idIncome;
     private BigDecimal amount;
     private LocalDateTime createDate;
 }

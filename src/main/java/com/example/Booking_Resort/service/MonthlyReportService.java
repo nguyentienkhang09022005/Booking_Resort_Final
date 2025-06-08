@@ -12,7 +12,6 @@ import com.example.Booking_Resort.models.Expense;
 import com.example.Booking_Resort.models.Monthly_Report;
 import com.example.Booking_Resort.models.Room;
 import com.example.Booking_Resort.repository.BookingRoomRepository;
-import com.example.Booking_Resort.repository.BookingServiceRepository;
 import com.example.Booking_Resort.repository.ExpenseRepository;
 import com.example.Booking_Resort.repository.MonthlyReportRepository;
 import lombok.AccessLevel;
@@ -66,7 +65,8 @@ public class MonthlyReportService {
                 .details(report.getDetails().stream().map(detail -> {
                     String titleOfExpense = null;
                     String titleOfIncome = null;
-                    String nameUser = null;
+                    String idExpense = null;
+                    String idIncome = null;
 
                     if ("Chi".equalsIgnoreCase(detail.getType())) {
                         Expense matchedExpense = expenseRepository.findByIdResort_IdRsAndAmountAndCreateDate(
@@ -76,6 +76,7 @@ public class MonthlyReportService {
                         );
                         if (matchedExpense != null) {
                             titleOfExpense = matchedExpense.getCategory();
+                            idExpense = matchedExpense.getIdExpense();
                         }
                     }
 
@@ -88,6 +89,7 @@ public class MonthlyReportService {
                         if (matchedBooking.isPresent()) {
                             Room room = matchedBooking.get().getIdRoom();
                             titleOfIncome = room != null ? room.getName_room() : null;
+                            idIncome = matchedBooking.get().getIdBr();
                         }
                     }
 
@@ -95,6 +97,8 @@ public class MonthlyReportService {
                             .type(detail.getType())
                             .titleOfExpense(titleOfExpense)
                             .titleOfIncome(titleOfIncome)
+                            .idExpense(idExpense)
+                            .idIncome(idIncome)
                             .amount(detail.getAmount())
                             .createDate(detail.getCreateDate())
                             .build();
