@@ -25,6 +25,10 @@ public class Booking_Service
     @JoinColumn(name = "id_user", nullable = false)
     private User idUser;
 
+    @ManyToOne
+    @JoinColumn(name = "id_br", nullable = false)
+    private Booking_room idBr;
+
     @CreationTimestamp
     @Column(name = "booking_date", updatable = false)
     private LocalDateTime booking_date;

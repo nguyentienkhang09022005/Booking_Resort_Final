@@ -14,4 +14,6 @@ public interface BookingServiceRepository extends JpaRepository<Booking_Service,
     List<Booking_Service> findByIdUser(User idUser);
 
     List<Booking_Service> findByIdUserIdUser(String idUser);
+
+    List<Booking_Service> findByIdBr_IdBr(String idBr);
 }

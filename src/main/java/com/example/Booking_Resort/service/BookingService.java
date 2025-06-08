@@ -48,55 +48,49 @@ public class BookingService
         return (images != null && !images.isEmpty()) ? images.get(0).getUrl() : null;
     }
 
-
     // Hàm lấy danh sách booking
-    public List<BookingRoomRespone> getListBookingRoom(String idUser)
-    {
+    public List<BookingRoomRespone> getListBookingRoom(String idUser) {
         List<Booking_room> bookingRooms = bookingRoomRepository.findByIdUser_IdUser(idUser);
         if (bookingRooms.isEmpty()) {
             throw new ApiException(ErrorCode.BOOKING_ROOM_NOT_FOUND);
         }
 
-        return bookingRooms
-                .stream()
-                .map(bookingRoom -> {
-                    // Truy vấn booking_service theo id_user
-                    List<Booking_Service> services = bookingServiceRepository
-                            .findByIdUser(bookingRoom.getIdUser());
+        return bookingRooms.stream().map(bookingRoom -> {
+            // Lấy dịch vụ theo bookingRoom hiện tại
+            List<Booking_Service> services = bookingServiceRepository.findByIdBr_IdBr(bookingRoom.getIdBr());
 
-                    List<BookingServiceResponse> serviceDtos = services.stream()
-                            .map(service -> BookingServiceResponse.builder()
-                                    .idSV(service.getIdSV().getId_sv())
-                                    .nameService(service.getIdSV().getName_sv())
-                                    .quantity(service.getQuantity())
-                                    .total_amount(service.getTotal_amount())
-                                    .build())
-                            .collect(Collectors.toList());
+            List<BookingServiceResponse> serviceDtos = services.stream()
+                    .map(service -> BookingServiceResponse.builder()
+                            .idSV(service.getIdSV().getId_sv())
+                            .nameService(service.getIdSV().getName_sv())
+                            .quantity(service.getQuantity())
+                            .total_amount(service.getTotal_amount())
+                            .build())
+                    .collect(Collectors.toList());
 
-                    Resort resort = bookingRoom.getIdRoom().getIdRs();
-                    Room room = bookingRoom.getIdRoom();
+            Resort resort = bookingRoom.getIdRoom().getIdRs();
+            Room room = bookingRoom.getIdRoom();
 
-                    return BookingRoomRespone.builder()
-                            .idBr(bookingRoom.getIdBr())
-                            .checkinday(bookingRoom.getCheckinday())
-                            .checkoutday(bookingRoom.getCheckoutday())
-                            .total_amount(bookingRoom.getTotal_amount())
-                            .status(bookingRoom.getStatus())
-                            .resortResponse(ResortForBookingResponse.builder()
-                                    .name_rs(resort.getName_rs())
-                                    .location_rs(resort.getLocation_rs())
-                                    .image(getFirstImageUrl(resort.getImages()))
-                                    .build())
-                            .roomResponse(RoomForBookingRespone.builder()
-                                    .name_room(room.getName_room())
-                                    .type_room(room.getId_type().getNameType())
-                                    .price(room.getPrice())
-                                    .image(getFirstImageUrl(room.getImages()))
-                                    .build())
-                            .services(serviceDtos)
-                            .build();
-                })
-                .collect(Collectors.toList());
+            return BookingRoomRespone.builder()
+                    .idBr(bookingRoom.getIdBr())
+                    .checkinday(bookingRoom.getCheckinday())
+                    .checkoutday(bookingRoom.getCheckoutday())
+                    .total_amount(bookingRoom.getTotal_amount())
+                    .status(bookingRoom.getStatus())
+                    .resortResponse(ResortForBookingResponse.builder()
+                            .name_rs(resort.getName_rs())
+                            .location_rs(resort.getLocation_rs())
+                            .image(getFirstImageUrl(resort.getImages()))
+                            .build())
+                    .roomResponse(RoomForBookingRespone.builder()
+                            .name_room(room.getName_room())
+                            .type_room(room.getId_type().getNameType())
+                            .price(room.getPrice())
+                            .image(getFirstImageUrl(room.getImages()))
+                            .build())
+                    .services(serviceDtos)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
     // Hàm lấy thông tin chi tiết đặt phòng
@@ -192,6 +186,7 @@ public class BookingService
         return response;
     }
 
+    @Transactional
     // Hàm lưu phòng được đặt xuống csdl
     public BookingRoomRespone saveBookingRoom(BookingRoomRequest request) {
         User user = userRepository.findById(request.getId_user()).orElseThrow(
@@ -200,7 +195,6 @@ public class BookingService
         Room room = roomRepository.findById(request.getId_room()).orElseThrow(
                 () -> new ApiException(ErrorCode.ROOM_NOT_FOUND));
 
-        // Gán 1 lần giá trị cho bookingroom và detail_report
         LocalDateTime now = LocalDateTime.now().withNano(0);
 
         Booking_room bookingRoom = bookingMapper.toBookingRoom(request);
@@ -208,43 +202,37 @@ public class BookingService
         bookingRoom.setIdUser(user);
         bookingRoom.setCreate_date(now);
 
-        // Biến tính tổng tiền phòng + dịch vụ
         BigDecimal totalAmount = room.getPrice();
 
-        bookingRoomRepository.save(bookingRoom);
+        bookingRoom = bookingRoomRepository.save(bookingRoom);
 
         List<BookingServiceResponse> serviceResponses = new ArrayList<>();
         if (request.getServices() != null && !request.getServices().isEmpty()) {
             List<Booking_Service> bookingServices = new ArrayList<>();
             for (BookingServiceRequest serviceInfo : request.getServices()) {
 
-                // Bỏ qua nếu không nhập dịch vụ
                 if (serviceInfo == null || serviceInfo.getId_sv() == null || serviceInfo.getQuantity() == null) {
                     continue;
                 }
-                // Truy vấn dịch vụ từ cơ sở dữ liệu theo Id_sv
+
                 ServiceRS serviceRS = serviceRSRepository.findById(serviceInfo.getId_sv())
                         .orElseThrow(() -> new ApiException(ErrorCode.SERVICE_NOT_FOUND));
 
-                // Biến tiền của từng dịch vụ
                 BigDecimal serviceTotal = serviceRS.getPrice().multiply(BigDecimal.valueOf(serviceInfo.getQuantity()));
 
-                // Tạo Booking_Service và gán các thông tin
                 Booking_Service bookingService = new Booking_Service();
                 bookingService.setIdSV(serviceRS);
                 bookingService.setIdUser(user);
                 bookingService.setQuantity(serviceInfo.getQuantity());
                 bookingService.setTotal_amount(serviceTotal);
+                bookingService.setIdBr(bookingRoom);
 
                 totalAmount = totalAmount.add(serviceTotal);
 
-                // Thêm vào danh sách bookingServices
                 bookingServices.add(bookingService);
             }
-            // Lưu tất cả dịch vụ vào cơ sở dữ liệu
             bookingServiceRepository.saveAll(bookingServices);
 
-            // Map sang response DTO
             serviceResponses = bookingServices.stream()
                     .map(bs -> BookingServiceResponse.builder()
                             .idSV(bs.getIdSV().getId_sv())
@@ -254,8 +242,12 @@ public class BookingService
                             .build())
                     .collect(Collectors.toList());
         }
-        bookingRoom.setTotal_amount(totalAmount); // Lưu tổng tiền đã cộng với dịch vụ
-        bookingRoom = bookingRoomRepository.save(bookingRoom);
+
+        // Cập nhật tổng tiền và lưu bookingRoom LẦN HAI
+        bookingRoom.setTotal_amount(totalAmount);
+        bookingRoom = bookingRoomRepository.save(bookingRoom); // Lưu lại để cập nhật total_amount
+
+        // ... (Phần còn lại của code của bạn)
 
         // Lấy tháng năm hiện tại
         int month = now.getMonthValue();
@@ -345,6 +337,7 @@ public class BookingService
                 bookingService.setIdUser(bookingRoom.getIdUser());
                 bookingService.setQuantity(serviceReq.getQuantity());
                 bookingService.setTotal_amount(serviceAmount);
+                bookingService.setIdBr(bookingRoom);
 
                 totalAmount = totalAmount.add(serviceAmount);
                 newServices.add(bookingService);
