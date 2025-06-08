@@ -94,13 +94,13 @@ public class BookingService
     }
 
     // Hàm lấy thông tin chi tiết đặt phòng
-    public BookingRoomRespone getInfBookingRoom(String idBookingRoom)
-    {
+    public BookingRoomRespone getInfBookingRoom(String idBookingRoom) {
         Booking_room bookingRoom = bookingRoomRepository.findById(idBookingRoom).orElseThrow(
                 () -> new ApiException(ErrorCode.BOOKING_ROOM_NOT_FOUND)
         );
 
-        List<Booking_Service> services = bookingServiceRepository.findByIdUser(bookingRoom.getIdUser());
+        // Fix ở đây: Lấy đúng dịch vụ thuộc về bookingRoom đó
+        List<Booking_Service> services = bookingServiceRepository.findByIdBr_IdBr(idBookingRoom);
 
         List<BookingServiceResponse> listService = services.stream()
                 .map(service -> BookingServiceResponse.builder()
@@ -135,6 +135,7 @@ public class BookingService
                 .services(listService)
                 .build();
     }
+
 
     // Hàm lấy danh sách đặt phòng của mỗi resort
     public List<BookingRoomRespone> getListBookingRoomOfResort(String idResort)
