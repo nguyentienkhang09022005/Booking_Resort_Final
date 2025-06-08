@@ -12,4 +12,5 @@ public interface BookingRoomRepository extends JpaRepository<Booking_room, Strin
     List<Booking_room> findByIdUser_IdUser(String idUser);
 
     List<Booking_room> findByIdRoom_IdRs_IdRs(String idResort);
+
 }

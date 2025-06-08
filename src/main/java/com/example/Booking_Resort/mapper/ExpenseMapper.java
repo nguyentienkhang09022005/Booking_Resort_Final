@@ -12,7 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface ExpenseMapper {
 
     @Mapping(target = "idResort", ignore = true)
-    @Mapping(target = "create_date", ignore = true)
+    @Mapping(target = "createDate", ignore = true)
     Expense toExpense(ExpenseCreationRequest request);
 
     ExpenseResponse toExpenseResponse(Expense expense);

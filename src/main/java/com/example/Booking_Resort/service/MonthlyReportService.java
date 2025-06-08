@@ -7,7 +7,13 @@ import com.example.Booking_Resort.dto.response.MonthlyReportForChartResponse;
 import com.example.Booking_Resort.dto.response.MonthlyReportResponse;
 import com.example.Booking_Resort.exception.ApiException;
 import com.example.Booking_Resort.exception.ErrorCode;
+import com.example.Booking_Resort.models.Booking_room;
+import com.example.Booking_Resort.models.Expense;
 import com.example.Booking_Resort.models.Monthly_Report;
+import com.example.Booking_Resort.models.Room;
+import com.example.Booking_Resort.repository.BookingRoomRepository;
+import com.example.Booking_Resort.repository.BookingServiceRepository;
+import com.example.Booking_Resort.repository.ExpenseRepository;
 import com.example.Booking_Resort.repository.MonthlyReportRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,6 +33,8 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class MonthlyReportService {
     MonthlyReportRepository monthlyReportRepository;
+    ExpenseRepository expenseRepository;
+    BookingRoomRepository bookingRoomRepository;
 
     // Hàm chi tiết thông tin báo cáo của tháng/năm
     public MonthlyReportResponse infMonthReport(MonthlyReportGetInfomationRequest request) {
@@ -42,6 +51,9 @@ public class MonthlyReportService {
                 .findFirst()
                 .orElseThrow(() -> new ApiException(ErrorCode.REPORT_NOT_FOUND));
 
+        List<Booking_room> bookingRooms = bookingRoomRepository
+                .findByIdRoom_IdRs_IdRs(report.getIdResort().getIdRs());
+
         return MonthlyReportResponse.builder()
                 .idReport(report.getIdReport())
                 .nameReport(report.getIdResort().getName_rs())
@@ -51,13 +63,43 @@ public class MonthlyReportService {
                 .totalExpense(report.getTotalExpense())
                 .netProfit(report.getNetProfit())
                 .generatedAt(report.getGeneratedAt())
-                .details(report.getDetails().stream().map(detail ->
-                                DetailReportResponse.builder()
-                                        .type(detail.getType())
-                                        .amount(detail.getAmount())
-                                        .createDate(detail.getCreateDate())
-                                        .build())
-                        .collect(Collectors.toList()))
+                .details(report.getDetails().stream().map(detail -> {
+                    String titleOfExpense = null;
+                    String titleOfIncome = null;
+                    String nameUser = null;
+
+                    if ("Chi".equalsIgnoreCase(detail.getType())) {
+                        Expense matchedExpense = expenseRepository.findByIdResort_IdRsAndAmountAndCreateDate(
+                                report.getIdResort().getIdRs(),
+                                detail.getAmount(),
+                                detail.getCreateDate()
+                        );
+                        if (matchedExpense != null) {
+                            titleOfExpense = matchedExpense.getCategory();
+                        }
+                    }
+
+                    if ("Thu".equalsIgnoreCase(detail.getType())) {
+                        Optional<Booking_room> matchedBooking = bookingRooms.stream()
+                                .filter(br -> br.getTotal_amount().compareTo(detail.getAmount()) == 0
+                                        && br.getCreate_date().toLocalDate().equals(detail.getCreateDate().toLocalDate()))
+                                .findFirst();
+
+                        if (matchedBooking.isPresent()) {
+                            Room room = matchedBooking.get().getIdRoom();
+                            titleOfIncome = room != null ? room.getName_room() : null;
+                        }
+                    }
+
+                    return DetailReportResponse.builder()
+                            .type(detail.getType())
+                            .titleOfExpense(titleOfExpense)
+                            .titleOfIncome(titleOfIncome)
+                            .amount(detail.getAmount())
+                            .createDate(detail.getCreateDate())
+                            .build();
+                }).collect(Collectors.toList()))
+
                 .build();
     }
 

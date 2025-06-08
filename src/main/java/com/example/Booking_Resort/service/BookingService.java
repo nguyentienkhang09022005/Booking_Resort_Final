@@ -44,6 +44,11 @@ public class BookingService
     ResortMapper resortMapper;
     RoomMapper roomMapper;
 
+    private String getFirstImageUrl(List<Image> images) {
+        return (images != null && !images.isEmpty()) ? images.get(0).getUrl() : null;
+    }
+
+
     // Hàm lấy danh sách booking
     public List<BookingRoomRespone> getListBookingRoom(String idUser)
     {
@@ -80,13 +85,13 @@ public class BookingService
                             .resortResponse(ResortForBookingResponse.builder()
                                     .name_rs(resort.getName_rs())
                                     .location_rs(resort.getLocation_rs())
-                                    .image(resort.getImages().get(0).getUrl())
+                                    .image(getFirstImageUrl(resort.getImages()))
                                     .build())
                             .roomResponse(RoomForBookingRespone.builder()
                                     .name_room(room.getName_room())
                                     .type_room(room.getId_type().getNameType())
                                     .price(room.getPrice())
-                                    .image(room.getImages().get(0).getUrl())
+                                    .image(getFirstImageUrl(room.getImages()))
                                     .build())
                             .services(serviceDtos)
                             .build();
@@ -125,13 +130,13 @@ public class BookingService
                 .resortResponse(ResortForBookingResponse.builder()
                         .name_rs(resort.getName_rs())
                         .location_rs(resort.getLocation_rs())
-                        .image(resort.getImages().get(0).getUrl())
+                        .image(getFirstImageUrl(resort.getImages()))
                         .build())
                 .roomResponse(RoomForBookingRespone.builder()
                         .name_room(room.getName_room())
                         .type_room(room.getId_type().getNameType())
                         .price(room.getPrice())
-                        .image(room.getImages().get(0).getUrl())
+                        .image(getFirstImageUrl(room.getImages()))
                         .build())
                 .services(listService)
                 .build();
@@ -172,13 +177,13 @@ public class BookingService
                     .resortResponse(ResortForBookingResponse.builder()
                             .name_rs(resort.getName_rs())
                             .location_rs(resort.getLocation_rs())
-                            .image(resort.getImages().get(0).getUrl())
+                            .image(getFirstImageUrl(resort.getImages()))
                             .build())
                     .roomResponse(RoomForBookingRespone.builder()
                             .name_room(room.getName_room())
                             .type_room(room.getId_type().getNameType())
                             .price(room.getPrice())
-                            .image(room.getImages().get(0).getUrl())
+                            .image(getFirstImageUrl(room.getImages()))
                             .build())
                     .services(serviceResponses)
                     .build();
@@ -289,10 +294,10 @@ public class BookingService
         bookingResponse.setServices(serviceResponses);
 
         ResortForBookingResponse resortInfo = resortMapper.toResortForBookingResponse(room.getIdRs());
-        resortInfo.setImage(room.getIdRs().getImages().get(0).getUrl());
+        resortInfo.setImage(getFirstImageUrl(room.getIdRs().getImages()));
         RoomForBookingRespone roomInfo = roomMapper.toRoomForBookingResponse(room);
         roomInfo.setType_room(room.getId_type().getNameType());
-        roomInfo.setImage(room.getImages().get(0).getUrl());
+        roomInfo.setImage(getFirstImageUrl(room.getImages()));
 
         bookingResponse.setResortResponse(resortInfo);
         bookingResponse.setRoomResponse(roomInfo);
@@ -395,9 +400,9 @@ public class BookingService
         bookingRespone.setServices(serviceResponses);
 
         ResortForBookingResponse resortInfo = resortMapper.toResortForBookingResponse(updatedBooking.getIdRoom().getIdRs());
-        resortInfo.setImage(updatedBooking.getIdRoom().getIdRs().getImages().get(0).getUrl());
+        resortInfo.setImage(getFirstImageUrl(updatedBooking.getIdRoom().getIdRs().getImages()));
         RoomForBookingRespone roomInfo = roomMapper.toRoomForBookingResponse(updatedBooking.getIdRoom());
-        roomInfo.setImage(updatedBooking.getIdRoom().getIdRs().getImages().get(0).getUrl());
+        roomInfo.setImage(getFirstImageUrl(updatedBooking.getIdRoom().getImages()));
         roomInfo.setType_room(updatedBooking.getIdRoom().getId_type().getNameType());
 
         bookingRespone.setResortResponse(resortInfo);

@@ -23,5 +23,5 @@ public class Expense
     private BigDecimal amount;
 
     @Column(name = "create_date", updatable = false, nullable = false)
-    private LocalDateTime create_date;
+    private LocalDateTime createDate;
 }

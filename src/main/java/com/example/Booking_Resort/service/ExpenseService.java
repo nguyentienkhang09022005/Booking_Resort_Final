@@ -73,7 +73,7 @@ public class ExpenseService {
         LocalDateTime now = LocalDateTime.now().withNano(0);
 
         Expense expense = expenseMapper.toExpense(request);
-        expense.setCreate_date(now);
+        expense.setCreateDate(now);
         expense.setIdResort(resort);
         expenseRepository.save(expense);
 
@@ -120,7 +120,7 @@ public class ExpenseService {
                 .orElseThrow(() -> new ApiException(ErrorCode.EXPENSE_NOT_FOUND));
 
         Resort resort = expense.getIdResort();
-        LocalDateTime expenseDate = expense.getCreate_date();
+        LocalDateTime expenseDate = expense.getCreateDate();
         int month = expenseDate.getMonthValue();
         int year = expenseDate.getYear();
 
@@ -151,7 +151,7 @@ public class ExpenseService {
                 .orElseThrow(() -> new ApiException(ErrorCode.EXPENSE_NOT_FOUND));
 
         Resort resort = expense.getIdResort();
-        LocalDateTime expenseDate = expense.getCreate_date();
+        LocalDateTime expenseDate = expense.getCreateDate();
         int month = expenseDate.getMonthValue();
         int year = expenseDate.getYear();
 

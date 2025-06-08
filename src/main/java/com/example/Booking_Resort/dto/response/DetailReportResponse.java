@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class DetailReportResponse {
     private String type;
+    private String titleOfExpense;
+    private String titleOfIncome;
     private BigDecimal amount;
     private LocalDateTime createDate;
 }
