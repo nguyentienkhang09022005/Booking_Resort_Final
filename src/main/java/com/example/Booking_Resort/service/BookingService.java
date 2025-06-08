@@ -99,7 +99,6 @@ public class BookingService
                 () -> new ApiException(ErrorCode.BOOKING_ROOM_NOT_FOUND)
         );
 
-        // Fix ở đây: Lấy đúng dịch vụ thuộc về bookingRoom đó
         List<Booking_Service> services = bookingServiceRepository.findByIdBr_IdBr(idBookingRoom);
 
         List<BookingServiceResponse> listService = services.stream()
@@ -138,27 +137,24 @@ public class BookingService
 
 
     // Hàm lấy danh sách đặt phòng của mỗi resort
-    public List<BookingRoomRespone> getListBookingRoomOfResort(String idResort)
-    {
+    public List<BookingRoomRespone> getListBookingRoomOfResort(String idResort) {
         resortRepository.findById(idResort).orElseThrow(
                 () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
         );
 
         List<Booking_room> listBookingRoom = bookingRoomRepository.findByIdRoom_IdRs_IdRs(idResort);
 
-        List<BookingRoomRespone> response = listBookingRoom.stream().map(bookingRoom -> {
-            List<Booking_Service> services = bookingServiceRepository.findByIdUserIdUser(
-                    bookingRoom.getIdUser().getIdUser()
-            );
+        return listBookingRoom.stream().map(bookingRoom -> {
+            List<Booking_Service> services = bookingServiceRepository.findByIdBr_IdBr(bookingRoom.getIdBr());
 
-            List<BookingServiceResponse> serviceResponses = services.stream().map(service ->
-                    BookingServiceResponse.builder()
+            List<BookingServiceResponse> serviceResponses = services.stream()
+                    .map(service -> BookingServiceResponse.builder()
                             .idSV(service.getIdSV().getId_sv())
                             .nameService(service.getIdSV().getName_sv())
                             .quantity(service.getQuantity())
                             .total_amount(service.getTotal_amount())
-                            .build()
-            ).collect(Collectors.toList());
+                            .build())
+                    .collect(Collectors.toList());
 
             Resort resort = bookingRoom.getIdRoom().getIdRs();
             Room room = bookingRoom.getIdRoom();
@@ -183,9 +179,8 @@ public class BookingService
                     .services(serviceResponses)
                     .build();
         }).collect(Collectors.toList());
-
-        return response;
     }
+
 
     @Transactional
     // Hàm lưu phòng được đặt xuống csdl
