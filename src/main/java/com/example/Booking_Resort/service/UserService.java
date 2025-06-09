@@ -80,10 +80,16 @@ public class UserService
     {
         var context = SecurityContextHolder.getContext();
         String account = context.getAuthentication().getName();
-        User user = userRepository.findByAccount(account).orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND)
-        );
-        return userMapper.toUserRespone(user);
+        User user = userRepository.findByAccount(account)
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+        Image image = imageRepository.findFirstByIdUser_IdUser(user.getIdUser());
+        UserRespone response = userMapper.toUserRespone(user);
+        response.setAvatar(image != null ? image.getUrl() : null);
+
+        return response;
     }
+
 
     // Hàm lưu người dùng xuống csdl
     public UserRespone saveUser(UserCreationRequest request)

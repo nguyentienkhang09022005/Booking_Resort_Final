@@ -150,6 +150,7 @@ D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_R
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\service\BookingServiceService.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\mapper\RoomMapper.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\models\Permissions.java
+D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\request\LoginGoogleRequest.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\controller\ServiceRSController.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\models\FavoriteResortKey.java
 D:\Project_Android_Java\Booking_Resort_Final\src\main\java\com\example\Booking_Resort\dto\response\RoleResponse.java

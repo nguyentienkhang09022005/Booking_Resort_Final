@@ -71,6 +71,7 @@ com\example\Booking_Resort\dto\response\MonthlyReportResponse$MonthlyReportRespo
 com\example\Booking_Resort\dto\request\MonthlyReportCreationRequest$MonthlyReportCreationRequestBuilder.class
 com\example\Booking_Resort\dto\response\RoleResponse$RoleResponseBuilder.class
 com\example\Booking_Resort\models\User$UserBuilder.class
+com\example\Booking_Resort\dto\request\LoginGoogleRequest.class
 com\example\Booking_Resort\service\ForgotPasswordService.class
 com\example\Booking_Resort\service\ResortService.class
 com\example\Booking_Resort\dto\request\PaymentCreationRequest$PaymentCreationRequestBuilder.class
@@ -146,6 +147,7 @@ com\example\Booking_Resort\dto\request\ServiceRSUpdateRequest$ServiceRSUpdateReq
 com\example\Booking_Resort\mapper\PaymentMapperImpl.class
 com\example\Booking_Resort\mapper\UserMapper.class
 com\example\Booking_Resort\controller\BookingRoomController.class
+com\example\Booking_Resort\dto\request\LoginGoogleRequest$LoginGoogleRequestBuilder.class
 com\example\Booking_Resort\config\SecurityConfig.class
 com\example\Booking_Resort\dto\request\EvaluateCreationRequest$EvaluateCreationRequestBuilder.class
 com\example\Booking_Resort\dto\response\RegisterRespone$RegisterResponeBuilder.class

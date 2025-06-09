@@ -37,6 +37,7 @@ public class SecurityConfig
             "/oauth2/**",
             "/login/**",
             "/forgotPassword/**",
+            "/api/user/google-signin",
     };
 
     public SecurityConfig(CustomJwtDecoder customJwtDecoder,

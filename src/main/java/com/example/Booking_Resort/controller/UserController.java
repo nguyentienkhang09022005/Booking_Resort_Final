@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.Booking_Resort.config.CustomOAuth2User;
+import com.example.Booking_Resort.dto.request.LoginGoogleRequest;
 import com.example.Booking_Resort.dto.request.UserCreationRequest;
 import com.example.Booking_Resort.dto.request.UserUpdateRequest;
 import com.example.Booking_Resort.dto.response.ApiRespone;
@@ -123,7 +124,7 @@ public class UserController {
     }
 
     @PostMapping("/google-signin")
-    public ResponseEntity<AuthenticationRespone> googleSignIn(@RequestBody String idTokenString) {
+    public ResponseEntity<AuthenticationRespone> googleSignIn(@RequestBody LoginGoogleRequest request) {
         try {
             // 1. Verify the ID token with Google
             // You'll need to set up GoogleIdTokenVerifier with your client ID
@@ -131,7 +132,7 @@ public class UserController {
                     .setAudience(Collections.singletonList("137525615923-pkjhv8r88q9givj66mcfpg605p3oolef.apps.googleusercontent.com")) // Replace with your actual Web Client ID
                     .build();
 
-            GoogleIdToken idToken = verifier.verify(idTokenString);
+            GoogleIdToken idToken = verifier.verify(request.getToken());
 
             if (idToken != null) {
                 GoogleIdToken.Payload payload = idToken.getPayload();
