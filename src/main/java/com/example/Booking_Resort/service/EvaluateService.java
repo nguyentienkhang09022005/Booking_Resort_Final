@@ -63,6 +63,7 @@ public class EvaluateService
 
         var evaluateResponse = evaluateMapper.toEvaluateRespone(saveEvaluate);
         evaluateResponse.setIdEvaluate(saveEvaluate.getId_evaluate());
+        evaluateResponse.setStar_rating(saveEvaluate.getStar_rating());
         return evaluateResponse;
     }
 
@@ -75,6 +76,7 @@ public class EvaluateService
         evaluateMapper.updateEvaluate(evaluate, request);
         var evaluateResponse = evaluateMapper.toEvaluateRespone(evaluateRepository.save(evaluate));
         evaluateResponse.setIdEvaluate(idEvaluate);
+        evaluateResponse.setStar_rating(request.getStar_rating());
         return evaluateResponse;
     }
 
