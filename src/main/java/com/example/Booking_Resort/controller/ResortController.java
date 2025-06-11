@@ -56,7 +56,6 @@ public class ResortController {
     }
 
     // Endpoint tạo resort
-    @PreAuthorize("hasAuthority('CREATE_RESORT')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiRespone<ResortResponse> createResort(@RequestPart("request") ResortCreationRequest request,
                                                    @RequestPart(value = "file", required = false) MultipartFile file)
