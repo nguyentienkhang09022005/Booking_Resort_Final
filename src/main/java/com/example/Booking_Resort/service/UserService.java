@@ -51,7 +51,6 @@ public class UserService
         List<User> users = userRepository.findAll();
         List<String> userIds = users.stream().map(User::getIdUser).toList();
 
-        // Tối ưu: lấy toàn bộ avatar trong 1 truy vấn
         List<Image> images = imageRepository.findByIdUser_IdUserIn(userIds);
         Map<String, String> userAvatarMap = images.stream()
                 .collect(Collectors.toMap(
@@ -151,10 +150,8 @@ public class UserService
         return userRespone;
     }
 
-    // Hàm thay đổi thông tin người dùng
     @Transactional
-    public UserRespone updateUser(String id, UserUpdateRequest request)
-    {
+    public UserRespone updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorCode.USER_NOT_FOUND));
 
@@ -163,14 +160,12 @@ public class UserService
         user.setPassworduser(passwordEncoder.encode(request.getPassworduser()));
 
         var role = roleRepository.findAllById(request.getRole_user()); // Phải luôn có trong JSON vì là ignore
-
         user.setRole_user(new HashSet<>(role));
-
 
         String avatarUrl = null;
         if (request.getAvatar() != null && !request.getAvatar().isEmpty()) {
             try {
-                imageRepository.deleteByIdUser(user);// Xóa hình ảnh cũ của user
+                imageRepository.deleteByIdUser(user); // Xóa hình ảnh cũ của user
 
                 avatarUrl = uploadImageFile.uploadImage(request.getAvatar());
 
@@ -185,13 +180,14 @@ public class UserService
             }
         }
 
-        UserRespone userRespone =  userMapper.toUserRespone(userRepository.save(user));
-        userRespone.setAvatar(avatarUrl);
-        return userRespone;
+        User savedUser = userRepository.save(user);
+        UserRespone response = userMapper.toUserRespone(savedUser);
+        response.setAvatar(avatarUrl);
+
+        return response;
     }
 
     // Hàm xóa người dùng
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(String id)
     {
         userRepository.findById(id).orElseThrow(
