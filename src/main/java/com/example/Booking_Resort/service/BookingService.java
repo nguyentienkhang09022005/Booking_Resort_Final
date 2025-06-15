@@ -25,6 +25,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,6 +45,7 @@ public class BookingService
     MonthlyReportRepository monthlyReportRepository;
     ResortMapper resortMapper;
     RoomMapper roomMapper;
+    ImageRepository imageRepository;
 
     private String getFirstImageUrl(List<Image> images) {
         return (images != null && !images.isEmpty()) ? images.get(0).getUrl() : null;
@@ -50,29 +53,44 @@ public class BookingService
 
     // Hàm lấy danh sách booking
     public List<BookingRoomRespone> getListBookingRoom(String idUser) {
-        List<Booking_room> bookingRooms = bookingRoomRepository.findByIdUser_IdUser(idUser);
+        List<Booking_room> bookingRooms = bookingRoomRepository.findByIdUser_IdUserWithRoomAndResort(idUser);
         if (bookingRooms.isEmpty()) {
             throw new ApiException(ErrorCode.BOOKING_ROOM_NOT_FOUND);
         }
 
-        return bookingRooms.stream().map(bookingRoom -> {
-            // Lấy dịch vụ theo bookingRoom hiện tại
-            List<Booking_Service> services = bookingServiceRepository.findByIdBr_IdBr(bookingRoom.getIdBr());
+        List<String> bookingIds = bookingRooms.stream().map(Booking_room::getIdBr).toList();
+        List<Booking_Service> allServices = bookingServiceRepository.findByIdBr_IdBrIn(bookingIds);
 
-            List<BookingServiceResponse> serviceDtos = services.stream()
+        // Map dịch vụ theo bookingRoom
+        Map<String, List<Booking_Service>> servicesMap = allServices.stream()
+                .collect(Collectors.groupingBy(s -> s.getIdBr().getIdBr()));
+
+        // Tập hợp id phòng và resort để lấy ảnh
+        Set<String> resortIds = bookingRooms.stream().map(br -> br.getIdRoom().getIdRs().getIdRs()).collect(Collectors.toSet());
+        Set<String> roomIds = bookingRooms.stream().map(br -> br.getIdRoom().getIdRoom()).collect(Collectors.toSet());
+
+        Map<String, String> resortImageMap = imageRepository.findByIdRs_IdRsIn(resortIds).stream()
+                .collect(Collectors.toMap(i -> i.getIdRs().getIdRs(), Image::getUrl, (a, b) -> a));
+
+        Map<String, String> roomImageMap = imageRepository.findByIdRoom_IdRoomIn(roomIds).stream()
+                .collect(Collectors.toMap(i -> i.getIdRoom().getIdRoom(), Image::getUrl, (a, b) -> a));
+
+        return bookingRooms.stream().map(bookingRoom -> {
+            String idBr = bookingRoom.getIdBr();
+            Room room = bookingRoom.getIdRoom();
+            Resort resort = room.getIdRs();
+
+            List<BookingServiceResponse> serviceDtos = servicesMap.getOrDefault(idBr, List.of()).stream()
                     .map(service -> BookingServiceResponse.builder()
                             .idSV(service.getIdSV().getId_sv())
                             .nameService(service.getIdSV().getName_sv())
                             .quantity(service.getQuantity())
                             .total_amount(service.getTotal_amount())
                             .build())
-                    .collect(Collectors.toList());
-
-            Resort resort = bookingRoom.getIdRoom().getIdRs();
-            Room room = bookingRoom.getIdRoom();
+                    .toList();
 
             return BookingRoomRespone.builder()
-                    .idBr(bookingRoom.getIdBr())
+                    .idBr(idBr)
                     .checkinday(bookingRoom.getCheckinday())
                     .checkoutday(bookingRoom.getCheckoutday())
                     .total_amount(bookingRoom.getTotal_amount())
@@ -80,17 +98,17 @@ public class BookingService
                     .resortResponse(ResortForBookingResponse.builder()
                             .name_rs(resort.getName_rs())
                             .location_rs(resort.getLocation_rs())
-                            .image(getFirstImageUrl(resort.getImages()))
+                            .image(resortImageMap.get(resort.getIdRs()))
                             .build())
                     .roomResponse(RoomForBookingRespone.builder()
                             .name_room(room.getName_room())
                             .type_room(room.getId_type().getNameType())
                             .price(room.getPrice())
-                            .image(getFirstImageUrl(room.getImages()))
+                            .image(roomImageMap.get(room.getIdRoom()))
                             .build())
                     .services(serviceDtos)
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     // Hàm lấy thông tin chi tiết đặt phòng

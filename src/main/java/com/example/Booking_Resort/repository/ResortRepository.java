@@ -1,7 +1,6 @@
 package com.example.Booking_Resort.repository;
 
-import com.example.Booking_Resort.models.Resort;
-import com.example.Booking_Resort.models.User;
+import com.example.Booking_Resort.models.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

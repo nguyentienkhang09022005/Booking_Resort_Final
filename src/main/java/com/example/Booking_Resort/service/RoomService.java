@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,24 +44,32 @@ public class RoomService
             throw new ApiException(ErrorCode.RESORT_NOT_FOUND);
         }
 
-        return rooms.stream().map(room -> {
-            Image image = imageRepository.findFirstByIdRoom_IdRoom(room.getIdRoom());
+        // Lấy danh sách id phòng
+        List<String> roomIds = rooms.stream().map(Room::getIdRoom).toList();
 
+        // Lấy tất cả ảnh cho các phòng trong 1 truy vấn
+        List<Image> images = imageRepository.findByIdRoom_IdRoomIn(roomIds);
+        Map<String, String> roomImageMap = images.stream()
+                .collect(Collectors.toMap(
+                        img -> img.getIdRoom().getIdRoom(),
+                        Image::getUrl,
+                        (url1, url2) -> url1 // lấy ảnh đầu tiên nếu trùng
+                ));
+
+        return rooms.stream().map(room -> {
             return RoomRespone.builder()
                     .idRoom(room.getIdRoom())
                     .name_room(room.getName_room())
-                    .type_room(room.getId_type() != null ? room.getId_type().getNameType() : null) // lấy tên loại phòng
+                    .type_room(room.getId_type() != null ? room.getId_type().getNameType() : null)
                     .price(room.getPrice())
                     .status(room.getStatus())
                     .describe_room(room.getDescribe_room())
-                    .image(image != null ? image.getUrl() : null)
+                    .image(roomImageMap.get(room.getIdRoom()))
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
-
     // Hàm lưu phòng xuống csdl
-//    @PreAuthorize("hasAuthority('CREATE_ROOM')")
     public RoomRespone saveRoom(RoomCreationRequest request)
     {
         Resort resort = resortRepository.findById(request.getId_rs()).orElseThrow(

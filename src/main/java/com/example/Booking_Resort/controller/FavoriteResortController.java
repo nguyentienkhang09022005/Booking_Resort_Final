@@ -32,21 +32,11 @@ public class FavoriteResortController
 
     // Endpoint tạo yêu thích resort
     @PostMapping("/create_favorite")
-    public ApiRespone<FavoriteResortRespone> createFavorite(@RequestBody FavoriteResortRequest request)
+    public ApiRespone<Boolean> toggleFavoriteResort(@RequestBody FavoriteResortRequest request)
     {
-        return ApiRespone.<FavoriteResortRespone>builder()
+        return ApiRespone.<Boolean>builder()
                 .message("successful creation")
-                .data(favoriteResortService.saveFavoriteResort(request))
-                .build();
-    }
-
-    // Endpoint xóa yêu thích
-    @DeleteMapping("/delete_favorite/{idUser}/{idResort}")
-    public ApiRespone<String> deletePayment(@PathVariable String idUser, @PathVariable String idResort)
-    {
-        favoriteResortService.deleteFavoriteResort(idUser, idResort);
-        return ApiRespone.<String>builder()
-                .message("successful delete payment")
+                .data(favoriteResortService.toggleFavoriteResort(request))
                 .build();
     }
 }

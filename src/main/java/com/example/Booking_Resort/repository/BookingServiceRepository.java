@@ -11,9 +11,8 @@ import java.util.List;
 public interface BookingServiceRepository extends JpaRepository<Booking_Service, String> {
     void deleteByIdUser(User user);
 
-    List<Booking_Service> findByIdUser(User idUser);
-
-    List<Booking_Service> findByIdUserIdUser(String idUser);
-
     List<Booking_Service> findByIdBr_IdBr(String idBr);
+
+    // BookingServiceRepository
+    List<Booking_Service> findByIdBr_IdBrIn(List<String> idBrs);
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -57,9 +58,7 @@ public class FavoriteResortService
         return result;
     }
 
-    // Hàm tạo yêu thích
-    public FavoriteResortRespone saveFavoriteResort(FavoriteResortRequest request)
-    {
+    public boolean toggleFavoriteResort(FavoriteResortRequest request) {
         User user = userRepository.findById(request.getId_user()).orElseThrow(
                 () -> new ApiException(ErrorCode.USER_NOT_FOUND)
         );
@@ -68,31 +67,23 @@ public class FavoriteResortService
                 () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
         );
 
-        Favorite_Resort favoriteResort = new Favorite_Resort();
         FavoriteResortKey key = new FavoriteResortKey();
-        key.setId_rs(request.getId_rs());
         key.setId_user(request.getId_user());
+        key.setId_rs(request.getId_rs());
 
-        favoriteResort.setId(key);
-        favoriteResort.setIdUser(user);
-        favoriteResort.setIdResort(resort);
-        favoriteResortRepository.save(favoriteResort);
+        Optional<Favorite_Resort> existingFavorite = favoriteResortRepository.findById(key);
 
-        var favoriteResortRespone = new FavoriteResortRespone();
-        favoriteResortRespone.setResortId(resort.getIdRs());
-        favoriteResortRespone.setResortName(resort.getName_rs());
-        favoriteResortRespone.setCreated_at(LocalDateTime.now());
-
-        return favoriteResortRespone;
-    }
-
-    // Hàm xóa yêu thích
-    public void deleteFavoriteResort(String idUser, String idRs)
-    {
-        FavoriteResortKey key = new FavoriteResortKey();
-        key.setId_user(idUser);
-        key.setId_rs(idRs);
-
-        favoriteResortRepository.deleteById(key);
+        // Nếu thích rồi thì xóa
+        if (existingFavorite.isPresent()) {
+            favoriteResortRepository.deleteById(key);
+            return false; // Đã xóa
+        } else { // Nếu chưa thích thì tạo
+            Favorite_Resort favoriteResort = new Favorite_Resort();
+            favoriteResort.setId(key);
+            favoriteResort.setIdUser(user);
+            favoriteResort.setIdResort(resort);
+            favoriteResortRepository.save(favoriteResort);
+            return true;
+        }
     }
 }

@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,10 +49,18 @@ public class UserService
     // Hàm lấy danh sách người dùng
     public List<UserRespone> getAllUsers() {
         List<User> users = userRepository.findAll();
+        List<String> userIds = users.stream().map(User::getIdUser).toList();
+
+        // Tối ưu: lấy toàn bộ avatar trong 1 truy vấn
+        List<Image> images = imageRepository.findByIdUser_IdUserIn(userIds);
+        Map<String, String> userAvatarMap = images.stream()
+                .collect(Collectors.toMap(
+                        img -> img.getIdUser().getIdUser(),
+                        Image::getUrl,
+                        (url1, url2) -> url1 // chọn 1 ảnh nếu trùng
+                ));
 
         return users.stream().map(user -> {
-            Image image = imageRepository.findFirstByIdUser_IdUser(user.getIdUser());
-
             return UserRespone.builder()
                     .idUser(user.getIdUser())
                     .nameuser(user.getNameuser())
@@ -62,10 +71,11 @@ public class UserService
                     .dob(user.getDob())
                     .passport(user.getPassport())
                     .account(user.getAccount())
-                    .avatar(image != null ? image.getUrl() : null)
+                    .avatar(userAvatarMap.get(user.getIdUser()))
                     .build();
-        }).collect(Collectors.toList());
+        }).toList();
     }
+
 
     // Hàm tìm user thông qua id
     public UserRespone getUserById(String id)
