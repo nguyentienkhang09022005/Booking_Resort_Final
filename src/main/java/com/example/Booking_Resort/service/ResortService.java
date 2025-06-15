@@ -247,7 +247,7 @@ public class ResortService {
 
 
     // Hàm lấy danh sách resort đã tạo
-    public List<ResortResponse> getInfResorCreated(String idOwner) {
+    public List<ResortResponse> getInfResortCreated(String idOwner) {
         User owner = userRepository.findById(idOwner)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
 

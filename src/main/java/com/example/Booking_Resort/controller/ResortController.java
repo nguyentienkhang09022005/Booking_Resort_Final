@@ -41,7 +41,7 @@ public class ResortController {
     public ApiRespone<List<ResortResponse>> getAllResortCreated(@PathVariable String idOwner)
     {
         return ApiRespone.<List<ResortResponse>>builder()
-                .data(resortService.getInfResorCreated(idOwner))
+                .data(resortService.getInfResortCreated(idOwner))
                 .build();
     }
 

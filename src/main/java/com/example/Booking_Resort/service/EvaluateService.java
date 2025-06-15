@@ -12,6 +12,7 @@ import com.example.Booking_Resort.models.User;
 import com.example.Booking_Resort.repository.EvaluateRepository;
 import com.example.Booking_Resort.repository.ResortRepository;
 import com.example.Booking_Resort.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -38,33 +39,29 @@ public class EvaluateService
     }
 
     // Hàm thêm đánh giá vào csdl
-    public EvaluateRespone saveEvaluate(EvaluateCreationRequest request)
-    {
-        User user =  userRepository.findById(request.getId_user()).orElseThrow(
-                () -> new ApiException(ErrorCode.USER_NOT_FOUND)
-        );
-
-        Resort resort =  resortRepository.findById(request.getId_rs()).orElseThrow(
-                () -> new ApiException(ErrorCode.RESORT_NOT_FOUND)
-        );
-
-        // Kiểm tra nếu đã đánh giá rồi thì không cho đánh giá nữa
-        boolean isEvaluated = evaluateRepository.existsByIdUser_IdUserAndIdRs_IdRs(
-                request.getId_user(), request.getId_rs());
-
+    @Transactional
+    public EvaluateRespone saveEvaluate(EvaluateCreationRequest request) {
+        boolean isEvaluated = evaluateRepository.existsEvaluation(request.getId_user(), request.getId_rs());
         if (isEvaluated) {
             throw new ApiException(ErrorCode.EVALUATE_ALREADY_EXISTS);
         }
 
+        User user = userRepository.findById(request.getId_user())
+                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+
+        Resort resort = resortRepository.findById(request.getId_rs())
+                .orElseThrow(() -> new ApiException(ErrorCode.RESORT_NOT_FOUND));
+
         Evaluate evaluate = evaluateMapper.toEvaluate(request);
         evaluate.setIdUser(user);
         evaluate.setIdRs(resort);
-        Evaluate saveEvaluate = evaluateRepository.save(evaluate);
 
-        var evaluateResponse = evaluateMapper.toEvaluateRespone(saveEvaluate);
-        evaluateResponse.setIdEvaluate(saveEvaluate.getId_evaluate());
-        evaluateResponse.setStar_rating(saveEvaluate.getStar_rating());
-        return evaluateResponse;
+        Evaluate savedEvaluate = evaluateRepository.save(evaluate);
+
+        EvaluateRespone response = evaluateMapper.toEvaluateRespone(savedEvaluate);
+        response.setIdEvaluate(savedEvaluate.getId_evaluate());
+        response.setStar_rating(savedEvaluate.getStar_rating());
+        return response;
     }
 
     // Hàm thay đổi đánh giá

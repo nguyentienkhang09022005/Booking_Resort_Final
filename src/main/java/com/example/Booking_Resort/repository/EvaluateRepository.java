@@ -15,7 +15,11 @@ public interface EvaluateRepository extends JpaRepository<Evaluate, String> {
 
     List<Evaluate> findByIdRs_IdRs(String idRs);
 
-    boolean existsByIdUser_IdUserAndIdRs_IdRs(String idUser, String idRs);
+    @Query("""
+    SELECT COUNT(e) > 0 FROM Evaluate e 
+    WHERE e.idUser.idUser = :userId AND e.idRs.idRs = :resortId
+""")
+    boolean existsEvaluation(@Param("userId") String userId, @Param("resortId") String resortId);
 
     // Lấy tất cả đánh giá theo danh sách idRs
     List<Evaluate> findByIdRs_IdRsIn(List<String> idRs);
