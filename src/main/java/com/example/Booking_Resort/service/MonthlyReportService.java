@@ -1,5 +1,6 @@
 package com.example.Booking_Resort.service;
 
+import ch.qos.logback.core.joran.sanity.Pair;
 import com.example.Booking_Resort.dto.request.MonthlyReportForChartRequest;
 import com.example.Booking_Resort.dto.request.MonthlyReportGetInfomationRequest;
 import com.example.Booking_Resort.dto.response.DetailReportResponse;
@@ -11,9 +12,7 @@ import com.example.Booking_Resort.models.Booking_room;
 import com.example.Booking_Resort.models.Expense;
 import com.example.Booking_Resort.models.Monthly_Report;
 import com.example.Booking_Resort.models.Room;
-import com.example.Booking_Resort.repository.BookingRoomRepository;
-import com.example.Booking_Resort.repository.ExpenseRepository;
-import com.example.Booking_Resort.repository.MonthlyReportRepository;
+import com.example.Booking_Resort.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,9 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,6 +31,8 @@ public class MonthlyReportService {
     MonthlyReportRepository monthlyReportRepository;
     ExpenseRepository expenseRepository;
     BookingRoomRepository bookingRoomRepository;
+    DetailMonthlyReportRepository detailMonthlyReportRepository;
+    ResortRepository resortRepository;
 
     // Hàm chi tiết thông tin báo cáo của tháng/năm
     public MonthlyReportResponse infMonthReport(MonthlyReportGetInfomationRequest request) {
@@ -62,7 +61,10 @@ public class MonthlyReportService {
                 .totalExpense(report.getTotalExpense())
                 .netProfit(report.getNetProfit())
                 .generatedAt(report.getGeneratedAt())
-                .details(report.getDetails().stream().map(detail -> {
+                .details(report.getDetails().stream()
+                        .filter(detail -> detail.getCreateDate().getMonthValue() == request.getReportMonth()
+                                && detail.getCreateDate().getYear() == request.getReportYear())
+                        .map(detail -> {
                     String titleOfExpense = null;
                     String titleOfIncome = null;
                     String idExpense = null;
@@ -109,35 +111,45 @@ public class MonthlyReportService {
 
     // Hàm lấy dữ liệu của báo cáo theo năm
     public List<MonthlyReportForChartResponse> getMonthlyReportsForYear(MonthlyReportForChartRequest request) {
-        // Kiểm tra resort tồn tại
-        if (!monthlyReportRepository.existsByIdResort_IdRs(request.getIdResort())) {
+        if (!resortRepository.existsById(request.getIdResort())) {
             throw new ApiException(ErrorCode.RESORT_NOT_FOUND);
         }
 
-        // Lấy danh sách báo cáo của năm theo resort
-        List<Monthly_Report> reports = monthlyReportRepository
-                .findByIdResort_IdRsAndReportYear(request.getIdResort(), request.getReportYear());
+        List<Object[]> rawData = detailMonthlyReportRepository.getMonthlyRevenueExpense(
+                request.getIdResort(), request.getReportYear());
 
-        // Map báo cáo theo tháng để dễ tra cứu
-        Map<Integer, Monthly_Report> reportMap = reports.stream()
-                .collect(Collectors.toMap(Monthly_Report::getReportMonth, report -> report));
+        // Map kết quả từ query thành Map<month, response>
+        Map<Integer, MonthlyReportForChartResponse> reportMap = new HashMap<>();
+        for (Object[] row : rawData) {
+            int month = ((Number) row[0]).intValue();
+            BigDecimal revenue = (BigDecimal) row[1];
+            BigDecimal expense = (BigDecimal) row[2];
 
-        List<MonthlyReportForChartResponse> responses = new java.util.ArrayList<>();
-
-        for (int month = 1; month <= 12; month++) {
-            Monthly_Report report = reportMap.get(month);
-
-            MonthlyReportForChartResponse response = MonthlyReportForChartResponse.builder()
-                    .idReport(report != null ? report.getIdReport() : null)
+            reportMap.put(month, MonthlyReportForChartResponse.builder()
+                    .idReport(null)
                     .reportMonth(month)
                     .reportYear(request.getReportYear())
-                    .totalRevenue(report != null ? report.getTotalRevenue() : BigDecimal.ZERO)
-                    .totalExpense(report != null ? report.getTotalExpense() : BigDecimal.ZERO)
-                    .netProfit(report != null ? report.getNetProfit() : BigDecimal.ZERO)
-                    .build();
-
-            responses.add(response);
+                    .totalRevenue(revenue)
+                    .totalExpense(expense)
+                    .netProfit(revenue.subtract(expense))
+                    .build());
         }
-        return responses;
+
+        // Đảm bảo trả đủ 12 tháng
+        List<MonthlyReportForChartResponse> result = new ArrayList<>();
+        for (int month = 1; month <= 12; month++) {
+            MonthlyReportForChartResponse report = reportMap.getOrDefault(month,
+                    MonthlyReportForChartResponse.builder()
+                            .idReport(null)
+                            .reportMonth(month)
+                            .reportYear(request.getReportYear())
+                            .totalRevenue(BigDecimal.ZERO)
+                            .totalExpense(BigDecimal.ZERO)
+                            .netProfit(BigDecimal.ZERO)
+                            .build());
+            result.add(report);
+        }
+
+        return result;
     }
 }

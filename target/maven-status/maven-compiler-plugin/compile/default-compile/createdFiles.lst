@@ -198,6 +198,7 @@ com\example\Booking_Resort\mapper\ResortMapperImpl.class
 com\example\Booking_Resort\config\CustomJwtDecoder.class
 com\example\Booking_Resort\dto\request\EvaluateUpdateRequest.class
 com\example\Booking_Resort\service\PaymentService.class
+com\example\Booking_Resort\repository\DetailMonthlyReportRepository.class
 com\example\Booking_Resort\dto\response\InfResortResponse.class
 com\example\Booking_Resort\mapper\EvaluateMapper.class
 com\example\Booking_Resort\mapper\ExpenseMapperImpl.class
