@@ -28,7 +28,7 @@ Với nhu cầu du lịch và nghỉ dưỡng ngày càng tăng, việc đặt p
 
 ## 🛠️ Công nghệ sử dụng
 
-- **Frontend (Mobile)**: Android (Java, XML)  
+- **Frontend (Mobile)**: Android (Kotlin, XML)  
 - **Backend**: Spring Boot (RESTful API, JWT, OAuth2 Google)  
 - **Database**: PostgreSQL  
 - **Triển khai**: Render (Backend), Firebase/Cloudinary (Media)  
