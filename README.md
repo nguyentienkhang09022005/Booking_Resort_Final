@@ -1,6 +1,6 @@
-# 🏨 Booking Hotel Mobile App
+# 🏨 Booking Resort Mobile App
 
-> Ứng dụng di động hỗ trợ **đặt phòng khách sạn/khu nghỉ dưỡng** nhanh chóng, quản lý dịch vụ tiện ích, và thanh toán trực tuyến tiện lợi.
+> Ứng dụng di động hỗ trợ **đặt phòng khu nghỉ dưỡng** nhanh chóng, quản lý dịch vụ tiện ích, và thanh toán trực tuyến tiện lợi.
 
 ---
 
@@ -8,7 +8,7 @@
 
 Với nhu cầu du lịch và nghỉ dưỡng ngày càng tăng, việc đặt phòng và quản lý dịch vụ trở nên quan trọng. Tuy nhiên, nhiều ứng dụng hiện nay chưa tối ưu trải nghiệm người dùng, thiếu sự minh bạch trong dịch vụ và quy trình thanh toán.  
 
-👉 **Booking Hotel Mobile App** được phát triển nhằm mang lại:
+👉 **Booking Resort Mobile App** được phát triển nhằm mang lại:
 - Trải nghiệm đặt phòng nhanh chóng, tiện lợi.
 - Tích hợp đa dịch vụ (spa, ăn uống, đưa đón…).
 - Thanh toán an toàn, minh bạch.
