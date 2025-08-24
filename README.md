@@ -1,106 +1,76 @@
-📱 Booking Resort Mobile Application
+# 🏨 Booking Hotel Mobile App
 
-Một ứng dụng di động hỗ trợ người dùng đặt phòng & dịch vụ resort nhanh chóng, đồng thời cung cấp công cụ quản lý toàn diện cho chủ resort.
-Dự án được phát triển trong khuôn khổ môn Nhập môn Ứng dụng Di động – Trường ĐH Công Nghệ Thông Tin, ĐHQG-HCM.
+> Ứng dụng di động hỗ trợ **đặt phòng khách sạn/khu nghỉ dưỡng** nhanh chóng, quản lý dịch vụ tiện ích, và thanh toán trực tuyến tiện lợi.
 
-🚀 Tính năng chính
+---
 
-👤 Quản lý người dùng: Đăng ký, đăng nhập, quên mật khẩu bằng OTP, phân quyền (Admin/Manager/User).
+## ✨ Giới thiệu
 
-🏨 Quản lý resort: Thêm, sửa, xóa, hiển thị thông tin resort.
+Với nhu cầu du lịch và nghỉ dưỡng ngày càng tăng, việc đặt phòng và quản lý dịch vụ trở nên quan trọng. Tuy nhiên, nhiều ứng dụng hiện nay chưa tối ưu trải nghiệm người dùng, thiếu sự minh bạch trong dịch vụ và quy trình thanh toán.  
 
-🛏 Quản lý phòng: Xem chi tiết, tình trạng, giá cả; quản lý thêm/xóa/sửa.
+👉 **Booking Hotel Mobile App** được phát triển nhằm mang lại:
+- Trải nghiệm đặt phòng nhanh chóng, tiện lợi.
+- Tích hợp đa dịch vụ (spa, ăn uống, đưa đón…).
+- Thanh toán an toàn, minh bạch.
+- Quản lý đặt phòng và dịch vụ cá nhân dễ dàng.
 
-🍽 Quản lý dịch vụ: Spa, ăn uống, tham quan,...
+---
 
-📅 Đặt phòng & dịch vụ: Chọn ngày, phòng, dịch vụ, theo dõi lịch sử giao dịch.
+## 🎯 Mục tiêu dự án
 
-📊 Báo cáo doanh thu: Dành cho chủ resort, thống kê thu/chi theo tháng.
+- **Đặt phòng trực tuyến**: Tìm kiếm, lọc phòng theo nhu cầu.  
+- **Quản lý dịch vụ**: Đặt kèm spa, ăn uống, đưa đón, giải trí.  
+- **Thanh toán**: Hỗ trợ ví điện tử, thẻ ngân hàng.  
+- **Quản lý người dùng**: Đăng ký, đăng nhập (Google OAuth), quản lý hồ sơ cá nhân.  
+- **Quản trị hệ thống**: Admin quản lý phòng, dịch vụ, doanh thu, thống kê.  
 
-⭐ Đánh giá & yêu thích resort.
+---
 
-🛠 Công nghệ sử dụng
-📌 Frontend (Mobile)
+## 🛠️ Công nghệ sử dụng
 
-Kotlin / Java
+- **Frontend (Mobile)**: Android (Java, XML)  
+- **Backend**: Spring Boot (RESTful API, JWT, OAuth2 Google)  
+- **Database**: PostgreSQL  
+- **Triển khai**: Render (Backend), Firebase/Cloudinary (Media)  
+- **Khác**: Retrofit2 (API call), Glide (load ảnh), Postman, GitHub  
 
-Android Studio
+---
 
-Glide – tải & hiển thị ảnh
+## 📂 Kiến trúc hệ thống
 
-Retrofit + Gson – kết nối API
+Ứng dụng theo mô hình **Client - Server**:
+1. **Mobile App (Android)**: Giao diện người dùng, gọi API.  
+2. **Backend API (Spring Boot)**: Xử lý logic, xác thực, quản lý dữ liệu.  
+3. **Database (PostgreSQL)**: Lưu trữ thông tin người dùng, phòng, dịch vụ, đặt chỗ.  
 
-OkHttp + Interceptor – logging & auth
+---
 
-Google Maps SDK
+## 🖼️ Chức năng chính
 
-📌 Backend
+### Người dùng (Khách hàng)
+- 🔍 Tìm kiếm và đặt phòng theo ngày, loại phòng, giá.  
+- 📅 Quản lý lịch đặt phòng.  
+- 🛎️ Đặt dịch vụ kèm theo (spa, ăn uống, đưa đón).  
+- 💳 Thanh toán trực tuyến (ví điện tử, thẻ).  
+- 👤 Quản lý tài khoản, đăng nhập Google.  
 
-Spring Boot (Java) – RESTful API
+### Quản trị viên (Admin)
+- 🏢 Quản lý phòng (CRUD).  
+- 🛠️ Quản lý dịch vụ.  
+- 📊 Thống kê doanh thu, báo cáo.  
+- 👥 Quản lý người dùng.  
 
-PostgreSQL – cơ sở dữ liệu
+---
 
-Auth0 JWT – xác thực & phân quyền
+## 🚀 Cài đặt và chạy thử
 
-Render + Neon + Cloudinary – hosting backend, database & media
+### Yêu cầu:
+- [x] Android Studio (API 24 trở lên).  
+- [x] JDK 17.  
+- [x] PostgreSQL + pgAdmin.  
+- [x] Máy có kết nối Internet.  
 
-🖼️ Giao diện minh họa
-
-(Thêm screenshot hoặc mockup từ báo cáo vào thư mục /screenshots và hiển thị tại đây)
-
-Trang chủ
-
-Đặt phòng
-
-Lịch sử giao dịch
-
-Quản lý resort
-
-Báo cáo doanh thu
-
-📂 Cấu trúc dự án
-📱 mobile-app/
- ├── app/ (source code Android)
- 
- ├── res/ (layout, drawable, values)
- 
- └── ...
-
-💻 backend/
- ├── controller/
- 
- ├── service/
- 
- ├── repository/
- 
- ├── models/
- 
- └── ...
-
-
-👥 Nhóm thực hiện
-MSSV	Họ và tên	Vai trò
-
-23520699	Nguyễn Tiến Khang	Backend + Data Design
-
-23520755	Trần Đăng Khoa	UI/UX + Frontend
-
-23520683	Dương Trọng Khang	Frontend + Testing
-
-
-📈 Hướng phát triển
-
-💳 Tích hợp thanh toán trực tuyến (VNPay, Momo, PayPal).
-
-🔔 Push notification (FCM).
-
-🌐 Bản web cho Admin/Manager.
-
-🤖 Gợi ý thông minh (AI/ML) dựa trên hành vi người dùng.
-
-🍏 Phát triển phiên bản iOS.
-
-📜 Giấy phép
-
-Dự án phát triển cho mục đích học tập.
-Bạn có thể tham khảo, fork, và phát triển thêm 🚀.
+### Các bước:
+```bash
+# Truy cập vào đường dẫn Drive sau và tải file apk về: https://drive.google.com/file/d/1S8WaCW36R7w5Zh4IWz9iLb6xRpSSPP0g/view?usp=drive_link
+Vì là dự án môn học sẽ an toàn và không có mã độc giúp cho các bạn có thể lấy về để nghiên cứu và phát triển thêm.
